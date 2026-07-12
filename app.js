@@ -890,7 +890,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div class="open-dev-meta-grid">
                     <div class="open-dev-meta-item"><strong>Date:</strong> ${formattedDate}</div>
-                    <div class="open-dev-meta-item"><strong>Shift/Relay:</strong> ${dev.shift} / ${dev.relay}</div>
+                    <div class="open-dev-meta-item"><strong>Shift:</strong> ${dev.shift}</div>
+                    <div class="open-dev-meta-item"><strong>Relay:</strong> ${dev.relay}</div>
                     <div class="open-dev-meta-item"><strong>Observer:</strong> ${dev.shiftIncharge}</div>
                     <div class="open-dev-meta-item"><strong>Responsible:</strong> ${dev.responsiblePerson}</div>
                     <div class="open-dev-meta-item"><strong>Main Hazard:</strong> ${dev.mainHazard}</div>
