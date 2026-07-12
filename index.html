@@ -14,8 +14,6 @@
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <!-- CSS Stylesheet -->
     <link rel="stylesheet" href="style.css">
-    <!-- Chart.js library -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
@@ -485,21 +483,53 @@
                         </div>
                     </div>
 
-                    <!-- Charts Columns Grid -->
-                    <div class="charts-row">
-                        <!-- Pie Chart Column -->
-                        <div class="chart-box">
-                            <h3>Classification (UA vs UC)</h3>
-                            <div class="chart-canvas-wrapper" style="position: relative; height:250px; width:100%">
-                                <canvas id="chartClassification"></canvas>
+                    <!-- Tables Rows Grid -->
+                    <div class="dashboard-tables-wrapper">
+                        <!-- Table 1: Status Classification Summary Table -->
+                        <div class="dashboard-table-container">
+                            <h3>Status Classification Summary</h3>
+                            <div class="table-responsive">
+                                <table class="dashboard-table" id="tableStatusClassification">
+                                    <thead>
+                                        <tr>
+                                            <th>Unsafe Act (UA) Open</th>
+                                            <th>Unsafe Act (UA) Closed</th>
+                                            <th>Unsafe Condition (UC) Open</th>
+                                            <th>Unsafe Condition (UC) Closed</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td id="tdUaOpen" class="text-danger font-bold">0</td>
+                                            <td id="tdUaClosed" class="text-success font-bold">0</td>
+                                            <td id="tdUcOpen" class="text-danger font-bold">0</td>
+                                            <td id="tdUcClosed" class="text-success font-bold">0</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
 
-                        <!-- Horizontal Bar Chart Column -->
-                        <div class="chart-box">
-                            <h3>Main Hazards Distribution</h3>
-                            <div class="chart-canvas-wrapper" style="position: relative; height:250px; width:100%">
-                                <canvas id="chartHazards"></canvas>
+                        <!-- Table 2: Hazard Distribution Table -->
+                        <div class="dashboard-table-container" style="margin-top: 24px;">
+                            <h3>Hazard Category Distribution</h3>
+                            <div class="table-responsive">
+                                <table class="dashboard-table" id="tableHazardDistribution">
+                                    <thead>
+                                        <tr>
+                                            <th>Sl. No.</th>
+                                            <th>Hazard Category</th>
+                                            <th>Total Deviations</th>
+                                            <th>UA Open</th>
+                                            <th>UA Closed</th>
+                                            <th>UC Open</th>
+                                            <th>UC Closed</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbodyHazardDistribution">
+                                        <!-- Rows dynamically generated in app.js -->
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>

@@ -77,9 +77,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const statClosedDevs = document.getElementById('statClosedDevs');
     const statResolutionRate = document.getElementById('statResolutionRate');
 
-    // Chart.js Chart instances references to destroy before recreate
-    let chartClassificationInstance = null;
-    let chartHazardsInstance = null;
 
     // DOM Elements - Success Modal Receipt Fields
     const receiptClassification = document.getElementById('receiptClassification');
@@ -1294,8 +1291,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const renderAnalysisDashboard = (data) => {
         if (!data) data = [];
 
-        const total = data.length;
-        const openTotal = data.filter(d => d.status && d.status.endsWith('Open')).length;
+        // Standardize data for robust metrics calculations
+        const standardizedData = data.map(d => {
+            const rawCls = (d.classification || '').toUpperCase();
+            let cls = '';
+            if (rawCls === 'UA' || rawCls.includes('ACT') || rawCls.includes('UNSAFE ACT')) {
+                cls = 'UA';
+            } else if (rawCls === 'UC' || rawCls.includes('CONDITION') || rawCls.includes('UNSAFE CONDITION')) {
+                cls = 'UC';
+            }
+
+            const rawStat = (d.status || '').toUpperCase();
+            let isClosed = false;
+            if (rawStat.includes('CLOSE') || rawStat === 'CLOSED' || rawStat.includes('RECTIFIED')) {
+                isClosed = true;
+            }
+
+            return {
+                ...d,
+                standardClassification: cls,
+                isClosed: isClosed
+            };
+        });
+
+        const total = standardizedData.length;
+        const openTotal = standardizedData.filter(d => !d.isClosed).length;
         const closedTotal = total - openTotal;
         const resolutionRate = total > 0 ? Math.round((closedTotal / total) * 100) : 0;
 
@@ -1305,151 +1325,80 @@ document.addEventListener('DOMContentLoaded', () => {
         statClosedDevs.textContent = closedTotal;
         statResolutionRate.textContent = `${resolutionRate}%`;
 
-        // Classification breakdowns
-        const totalUA = data.filter(d => d.classification === 'UA').length;
-        const totalUC = data.filter(d => d.classification === 'UC').length;
+        // 1. General Status Summary Table counts
+        const uaOpen = standardizedData.filter(d => d.standardClassification === 'UA' && !d.isClosed).length;
+        const uaClosed = standardizedData.filter(d => d.standardClassification === 'UA' && d.isClosed).length;
+        const ucOpen = standardizedData.filter(d => d.standardClassification === 'UC' && !d.isClosed).length;
+        const ucClosed = standardizedData.filter(d => d.standardClassification === 'UC' && d.isClosed).length;
 
-        // Hazard categories counting & descending sorting
-        const hazardCounts = {};
-        data.forEach(d => {
+        // Render to Table 1 cells
+        document.getElementById('tdUaOpen').textContent = uaOpen;
+        document.getElementById('tdUaClosed').textContent = uaClosed;
+        document.getElementById('tdUcOpen').textContent = ucOpen;
+        document.getElementById('tdUcClosed').textContent = ucClosed;
+
+        // 2. Hazard categories counting & classification detail
+        const hazardStats = {};
+        standardizedData.forEach(d => {
             const h = d.mainHazard || 'Uncategorized';
-            hazardCounts[h] = (hazardCounts[h] || 0) + 1;
-        });
+            if (!hazardStats[h]) {
+                hazardStats[h] = {
+                    hazardName: h,
+                    total: 0,
+                    uaOpen: 0,
+                    uaClosed: 0,
+                    ucOpen: 0,
+                    ucClosed: 0
+                };
+            }
+            
+            hazardStats[h].total++;
 
-        const sortedHazards = Object.keys(hazardCounts).map(key => ({
-            hazard: key,
-            count: hazardCounts[key]
-        })).sort((a, b) => b.count - a.count);
-
-        const hazardLabels = sortedHazards.map(item => item.hazard);
-        const hazardData = sortedHazards.map(item => item.count);
-
-        // Render charts
-        renderClassificationChart(totalUA, totalUC);
-        renderHazardsChart(hazardLabels, hazardData);
-    };
-
-    const renderClassificationChart = (uaCount, ucCount) => {
-        if (chartClassificationInstance) {
-            chartClassificationInstance.destroy();
-        }
-
-        const canvas = document.getElementById('chartClassification');
-        if (!canvas) return;
-        const ctx = canvas.getContext('2d');
-
-        chartClassificationInstance = new Chart(ctx, {
-            type: 'pie',
-            data: {
-                labels: ['Unsafe Act (UA)', 'Unsafe Condition (UC)'],
-                datasets: [{
-                    data: [uaCount, ucCount],
-                    backgroundColor: [
-                        'rgba(249, 115, 22, 0.45)',
-                        'rgba(16, 185, 129, 0.45)'
-                    ],
-                    borderColor: [
-                        'rgba(249, 115, 22, 0.85)',
-                        'rgba(16, 185, 129, 0.85)'
-                    ],
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            color: '#e2e8f0',
-                            font: {
-                                family: "'Outfit', sans-serif",
-                                size: 12
-                            }
-                        }
-                    },
-                    tooltip: {
-                        titleFont: { family: "'Outfit', sans-serif" },
-                        bodyFont: { family: "'Outfit', sans-serif" }
-                    }
+            if (d.standardClassification === 'UA') {
+                if (!d.isClosed) {
+                    hazardStats[h].uaOpen++;
+                } else {
+                    hazardStats[h].uaClosed++;
+                }
+            } else if (d.standardClassification === 'UC') {
+                if (!d.isClosed) {
+                    hazardStats[h].ucOpen++;
+                } else {
+                    hazardStats[h].ucClosed++;
                 }
             }
         });
-    };
 
-    const renderHazardsChart = (labels, counts) => {
-        if (chartHazardsInstance) {
-            chartHazardsInstance.destroy();
+        // Convert to array and sort in decreasing order of total deviations
+        const sortedHazards = Object.keys(hazardStats).map(key => hazardStats[key])
+            .sort((a, b) => b.total - a.total);
+
+        // Render rows dynamically into tbodyHazardDistribution
+        const tbodyHazardDistribution = document.getElementById('tbodyHazardDistribution');
+        tbodyHazardDistribution.innerHTML = '';
+
+        if (sortedHazards.length === 0) {
+            tbodyHazardDistribution.innerHTML = `
+                <tr>
+                    <td colspan="7" class="text-muted" style="text-align: center; padding: 20px;">
+                        No hazard records found.
+                    </td>
+                </tr>
+            `;
+        } else {
+            sortedHazards.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="text-muted font-bold">${index + 1}</td>
+                    <td class="font-bold" style="color: #fff;">${item.hazardName}</td>
+                    <td class="text-info font-bold">${item.total}</td>
+                    <td class="${item.uaOpen > 0 ? 'text-danger font-bold' : 'text-muted'}">${item.uaOpen}</td>
+                    <td class="${item.uaClosed > 0 ? 'text-success font-bold' : 'text-muted'}">${item.uaClosed}</td>
+                    <td class="${item.ucOpen > 0 ? 'text-danger font-bold' : 'text-muted'}">${item.ucOpen}</td>
+                    <td class="${item.ucClosed > 0 ? 'text-success font-bold' : 'text-muted'}">${item.ucClosed}</td>
+                `;
+                tbodyHazardDistribution.appendChild(tr);
+            });
         }
-
-        const canvas = document.getElementById('chartHazards');
-        if (!canvas) return;
-        const ctx = canvas.getContext('2d');
-
-        chartHazardsInstance = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Deviation Count',
-                    data: counts,
-                    backgroundColor: 'rgba(59, 130, 246, 0.45)',
-                    borderColor: 'rgba(59, 130, 246, 0.85)',
-                    borderWidth: 2,
-                    borderRadius: 6
-                }]
-            },
-            options: {
-                indexAxis: 'y',
-                responsive: true,
-                maintainAspectRatio: false,
-                layout: {
-                    padding: {
-                        left: 10,
-                        right: 15,
-                        top: 5,
-                        bottom: 5
-                    }
-                },
-                scales: {
-                    x: {
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.05)'
-                        },
-                        ticks: {
-                            color: '#94a3b8',
-                            font: { family: "'Outfit', sans-serif" },
-                            stepSize: 1
-                        }
-                    },
-                    y: {
-                        grid: {
-                            display: false
-                        },
-                        ticks: {
-                            color: '#94a3b8',
-                            font: { family: "'Outfit', sans-serif" },
-                            callback: function(value, index) {
-                                const label = labels[index] || '';
-                                if (label && label.length > 15) {
-                                    return label.substring(0, 12) + '...';
-                                }
-                                return label;
-                            }
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        titleFont: { family: "'Outfit', sans-serif" },
-                        bodyFont: { family: "'Outfit', sans-serif" }
-                    }
-                }
-            }
-        });
     };
 });
