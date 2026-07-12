@@ -76,6 +76,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const statOpenDevs = document.getElementById('statOpenDevs');
     const statClosedDevs = document.getElementById('statClosedDevs');
     const statResolutionRate = document.getElementById('statResolutionRate');
+    const filterMonth = document.getElementById('filterMonth');
+    let unfilteredAnalysisData = [];
 
 
     // DOM Elements - Success Modal Receipt Fields
@@ -800,6 +802,19 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchAndLoadAnalysisData();
     });
 
+    filterMonth.addEventListener('change', (e) => {
+        const val = e.target.value;
+        if (val === 'all') {
+            renderAnalysisDashboard(unfilteredAnalysisData);
+        } else {
+            const filtered = unfilteredAnalysisData.filter(d => {
+                if (!d.observationDate) return false;
+                return d.observationDate.startsWith(val);
+            });
+            renderAnalysisDashboard(filtered);
+        }
+    });
+
     const fetchOpenDeviations = async () => {
         const url = getSavedAppsScriptUrl();
         if (!url) {
@@ -1276,16 +1291,54 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
 
             if (result.status === 'success') {
-                renderAnalysisDashboard(result.data);
+                unfilteredAnalysisData = result.data || [];
             } else {
                 showToast(`Failed to fetch dashboard data: ${result.message}`, 'error');
-                renderAnalysisDashboard(MOCK_DEVIATIONS_DATABASE);
+                unfilteredAnalysisData = MOCK_DEVIATIONS_DATABASE;
             }
         } catch (error) {
             console.error('Error fetching dashboard data:', error);
             showToast('Using offline fallback data for analysis.', 'info');
-            renderAnalysisDashboard(MOCK_DEVIATIONS_DATABASE);
+            unfilteredAnalysisData = MOCK_DEVIATIONS_DATABASE;
         }
+
+        populateMonthFilter(unfilteredAnalysisData);
+        filterMonth.value = 'all';
+        renderAnalysisDashboard(unfilteredAnalysisData);
+    };
+
+    const populateMonthFilter = (data) => {
+        // Reset option list to only "All Months"
+        filterMonth.innerHTML = '<option value="all">All Months</option>';
+
+        const monthsSet = new Set();
+        data.forEach(d => {
+            if (d.observationDate) {
+                const parts = d.observationDate.split('-');
+                if (parts.length >= 2) {
+                    monthsSet.add(`${parts[0]}-${parts[1]}`);
+                }
+            }
+        });
+
+        // Sort in descending order (most recent first)
+        const sortedMonths = Array.from(monthsSet).sort().reverse();
+
+        const MONTH_NAMES = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+
+        sortedMonths.forEach(mStr => {
+            const [year, month] = mStr.split('-');
+            const monthIndex = parseInt(month, 10) - 1;
+            const monthName = MONTH_NAMES[monthIndex] || month;
+            
+            const opt = document.createElement('option');
+            opt.value = mStr;
+            opt.textContent = `${monthName} ${year}`;
+            filterMonth.appendChild(opt);
+        });
     };
 
     const renderAnalysisDashboard = (data) => {
