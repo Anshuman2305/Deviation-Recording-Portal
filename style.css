@@ -1689,3 +1689,100 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     color: hsl(var(--text-muted));
     margin: 0;
 }
+
+/* ==========================================================================
+   Deviation Analysis Dashboard Styling
+   ========================================================================== */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 30px;
+}
+
+.metric-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: var(--transition-smooth);
+}
+
+.metric-card:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.metric-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: hsl(var(--text-muted));
+}
+
+.metric-value {
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.metric-value.text-primary {
+    color: #fff;
+}
+
+.metric-value.text-danger {
+    color: hsl(var(--danger));
+    text-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
+}
+
+.metric-value.text-success {
+    color: hsl(var(--success));
+    text-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+}
+
+.metric-value.text-info {
+    color: hsl(var(--accent-blue));
+    text-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+}
+
+.charts-row {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 24px;
+}
+
+.chart-box {
+    background: rgba(255, 255, 255, 0.015);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 24px;
+}
+
+.chart-box h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 12px;
+}
+
+@media (max-width: 768px) {
+    .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .charts-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .metrics-grid {
+        grid-template-columns: 1fr;
+    }
+}

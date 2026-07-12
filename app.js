@@ -68,6 +68,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeSuccessBtn = document.getElementById('closeSuccessBtn');
     const toastContainer = document.getElementById('toastContainer');
 
+    // DOM Elements - Deviation Analysis Dashboard
+    const tabAnalysis = document.getElementById('tabAnalysis');
+    const analysisView = document.getElementById('analysisView');
+    const refreshAnalysisBtn = document.getElementById('refreshAnalysisBtn');
+    const statTotalDevs = document.getElementById('statTotalDevs');
+    const statOpenDevs = document.getElementById('statOpenDevs');
+    const statClosedDevs = document.getElementById('statClosedDevs');
+    const statResolutionRate = document.getElementById('statResolutionRate');
+
+    // Chart.js Chart instances references to destroy before recreate
+    let chartClassificationInstance = null;
+    let chartHazardsInstance = null;
+
     // DOM Elements - Success Modal Receipt Fields
     const receiptClassification = document.getElementById('receiptClassification');
     const receiptHazard = document.getElementById('receiptHazard');
@@ -756,20 +769,38 @@ document.addEventListener('DOMContentLoaded', () => {
     tabReport.addEventListener('click', () => {
         tabReport.classList.add('active');
         tabManage.classList.remove('active');
+        tabAnalysis.classList.remove('active');
         reportView.classList.remove('hidden');
         manageView.classList.add('hidden');
+        analysisView.classList.add('hidden');
     });
 
     tabManage.addEventListener('click', () => {
         tabManage.classList.add('active');
         tabReport.classList.remove('active');
+        tabAnalysis.classList.remove('active');
         manageView.classList.remove('hidden');
         reportView.classList.add('hidden');
+        analysisView.classList.add('hidden');
         fetchOpenDeviations();
+    });
+
+    tabAnalysis.addEventListener('click', () => {
+        tabAnalysis.classList.add('active');
+        tabReport.classList.remove('active');
+        tabManage.classList.remove('active');
+        analysisView.classList.remove('hidden');
+        reportView.classList.add('hidden');
+        manageView.classList.add('hidden');
+        fetchAndLoadAnalysisData();
     });
 
     refreshOpenDevsBtn.addEventListener('click', () => {
         fetchOpenDeviations();
+    });
+
+    refreshAnalysisBtn.addEventListener('click', () => {
+        fetchAndLoadAnalysisData();
     });
 
     const fetchOpenDeviations = async () => {
@@ -1071,6 +1102,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // -------------------------------------------------------------
     // Interactive Toast Notification Elements
     // -------------------------------------------------------------
+    // -------------------------------------------------------------
+    // Interactive Toast Notification Elements
+    // -------------------------------------------------------------
     const showToast = (message, type = 'info') => {
         const toast = document.createElement('div');
         toast.className = `toast toast-${type}`;
@@ -1090,5 +1124,317 @@ document.addEventListener('DOMContentLoaded', () => {
             toast.classList.remove('show');
             setTimeout(() => { toast.remove(); }, 300);
         }, 4000);
+    };
+
+    // -------------------------------------------------------------
+    // Mock deviations database for offline development & analysis fallback
+    // -------------------------------------------------------------
+    const MOCK_DEVIATIONS_DATABASE = [
+        {
+            rowIndex: 2,
+            serialNo: "101",
+            observationDate: "2026-07-12",
+            shift: "Shift A (Morning)",
+            relay: "Relay A",
+            shiftIncharge: "John Doe (Observer)",
+            classification: "UA",
+            mainHazard: "Slope Stability",
+            briefDescription: "Unsecured rock face observed at Section 4B. Minor loose debris falling on haul road.",
+            deviationPhotos: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=600",
+            responsiblePerson: "Excavation Team",
+            actionTaken: "",
+            rectificationPhotos: "",
+            status: "UA Open",
+            submittedBy: "John Doe",
+            submittedByEmail: "john.doe@mining.com"
+        },
+        {
+            rowIndex: 3,
+            serialNo: "102",
+            observationDate: "2026-07-11",
+            shift: "Shift C (Night)",
+            relay: "Relay C",
+            shiftIncharge: "Sarah Connor (Safety Officer)",
+            classification: "UC",
+            mainHazard: "Mine Illumination",
+            briefDescription: "Dumping area lights at OB dump #2 flicker intermittently, creating low visibility zones.",
+            deviationPhotos: "",
+            responsiblePerson: "Electrical Maintenance",
+            actionTaken: "",
+            rectificationPhotos: "",
+            status: "UC Open",
+            submittedBy: "Sarah Connor",
+            submittedByEmail: "sarah.connor@mining.com"
+        },
+        {
+            rowIndex: 4,
+            serialNo: "103",
+            observationDate: "2026-07-09",
+            shift: "Shift B (Afternoon)",
+            relay: "Relay B",
+            shiftIncharge: "Arjun Mehta",
+            classification: "UA",
+            mainHazard: "Dumping",
+            briefDescription: "Dumper operator reversing near dump edge without spotter guidance.",
+            deviationPhotos: "",
+            responsiblePerson: "Haulage Team",
+            actionTaken: "Instructed operator immediately and assigned a dedicated spotter.",
+            rectificationPhotos: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=600",
+            status: "UA Close",
+            submittedBy: "Arjun Mehta",
+            submittedByEmail: "arjun.mehta@mining.com"
+        },
+        {
+            rowIndex: 5,
+            serialNo: "104",
+            observationDate: "2026-07-08",
+            shift: "Shift A (Morning)",
+            relay: "Relay D",
+            shiftIncharge: "Robert Green",
+            classification: "UC",
+            mainHazard: "Dumping",
+            briefDescription: "Edge berm at coal dump #3 is lower than 1.5m, unsafe for dumping operations.",
+            deviationPhotos: "",
+            responsiblePerson: "Civil Maintenance",
+            actionTaken: "Berm height built up to 2.0m using dozer.",
+            rectificationPhotos: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=600",
+            status: "UC Close",
+            submittedBy: "Robert Green",
+            submittedByEmail: "robert.green@mining.com"
+        },
+        {
+            rowIndex: 6,
+            serialNo: "105",
+            observationDate: "2026-07-07",
+            shift: "General",
+            relay: "General",
+            shiftIncharge: "Vijay Kumar",
+            classification: "UC",
+            mainHazard: "Explosives & Blasting",
+            briefDescription: "Access road to blasting shelter lacked clear warning signs prior to blasting hour.",
+            deviationPhotos: "",
+            responsiblePerson: "Blasting Team",
+            actionTaken: "Red flashing warning lights and barricade boards erected at junction.",
+            rectificationPhotos: "",
+            status: "UC Close",
+            submittedBy: "Vijay Kumar",
+            submittedByEmail: "vijay.kumar@mining.com"
+        },
+        {
+            rowIndex: 7,
+            serialNo: "106",
+            observationDate: "2026-07-05",
+            shift: "Shift B (Afternoon)",
+            relay: "Relay C",
+            shiftIncharge: "David Miller",
+            classification: "UA",
+            mainHazard: "Repair & Maintenance of HEMM",
+            briefDescription: "Technician working under excavator bucket without safety stand props.",
+            deviationPhotos: "",
+            responsiblePerson: "HEMM Workshop",
+            actionTaken: "",
+            rectificationPhotos: "",
+            status: "UA Open",
+            submittedBy: "David Miller",
+            submittedByEmail: "david.miller@mining.com"
+        },
+        {
+            rowIndex: 8,
+            serialNo: "107",
+            observationDate: "2026-07-04",
+            shift: "Shift C (Night)",
+            relay: "Relay A",
+            shiftIncharge: "Suresh Raina",
+            classification: "UC",
+            mainHazard: "Pumping",
+            briefDescription: "Pumping station sub-station has water accumulation inside cable trench.",
+            deviationPhotos: "",
+            responsiblePerson: "Pumping Team",
+            actionTaken: "Sumps pumps cleared water and trench sealed with sandbags.",
+            rectificationPhotos: "",
+            status: "UC Close",
+            submittedBy: "Suresh Raina",
+            submittedByEmail: "suresh.raina@mining.com"
+        }
+    ];
+
+    // -------------------------------------------------------------
+    // Dashboard Processing & Chart rendering
+    // -------------------------------------------------------------
+    const fetchAndLoadAnalysisData = async () => {
+        const url = getSavedAppsScriptUrl();
+        if (!url) {
+            showToast('Apps Script Web App URL is not set.', 'error');
+            renderAnalysisDashboard(MOCK_DEVIATIONS_DATABASE);
+            return;
+        }
+
+        statTotalDevs.textContent = '...';
+        statOpenDevs.textContent = '...';
+        statClosedDevs.textContent = '...';
+        statResolutionRate.textContent = '...';
+
+        try {
+            const response = await fetch(url + '?action=getAllDeviations');
+            const result = await response.json();
+
+            if (result.status === 'success') {
+                renderAnalysisDashboard(result.data);
+            } else {
+                showToast(`Failed to fetch dashboard data: ${result.message}`, 'error');
+                renderAnalysisDashboard(MOCK_DEVIATIONS_DATABASE);
+            }
+        } catch (error) {
+            console.error('Error fetching dashboard data:', error);
+            showToast('Using offline fallback data for analysis.', 'info');
+            renderAnalysisDashboard(MOCK_DEVIATIONS_DATABASE);
+        }
+    };
+
+    const renderAnalysisDashboard = (data) => {
+        if (!data) data = [];
+
+        const total = data.length;
+        const openTotal = data.filter(d => d.status && d.status.endsWith('Open')).length;
+        const closedTotal = total - openTotal;
+        const resolutionRate = total > 0 ? Math.round((closedTotal / total) * 100) : 0;
+
+        // Render metrics to UI
+        statTotalDevs.textContent = total;
+        statOpenDevs.textContent = openTotal;
+        statClosedDevs.textContent = closedTotal;
+        statResolutionRate.textContent = `${resolutionRate}%`;
+
+        // Classification breakdowns
+        const totalUA = data.filter(d => d.classification === 'UA').length;
+        const totalUC = data.filter(d => d.classification === 'UC').length;
+
+        // Hazard categories counting & descending sorting
+        const hazardCounts = {};
+        data.forEach(d => {
+            const h = d.mainHazard || 'Uncategorized';
+            hazardCounts[h] = (hazardCounts[h] || 0) + 1;
+        });
+
+        const sortedHazards = Object.keys(hazardCounts).map(key => ({
+            hazard: key,
+            count: hazardCounts[key]
+        })).sort((a, b) => b.count - a.count);
+
+        const hazardLabels = sortedHazards.map(item => item.hazard);
+        const hazardData = sortedHazards.map(item => item.count);
+
+        // Render charts
+        renderClassificationChart(totalUA, totalUC);
+        renderHazardsChart(hazardLabels, hazardData);
+    };
+
+    const renderClassificationChart = (uaCount, ucCount) => {
+        if (chartClassificationInstance) {
+            chartClassificationInstance.destroy();
+        }
+
+        const canvas = document.getElementById('chartClassification');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+
+        chartClassificationInstance = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Unsafe Act (UA)', 'Unsafe Condition (UC)'],
+                datasets: [{
+                    data: [uaCount, ucCount],
+                    backgroundColor: [
+                        'rgba(249, 115, 22, 0.45)',
+                        'rgba(16, 185, 129, 0.45)'
+                    ],
+                    borderColor: [
+                        'rgba(249, 115, 22, 0.85)',
+                        'rgba(16, 185, 129, 0.85)'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#e2e8f0',
+                            font: {
+                                family: "'Outfit', sans-serif",
+                                size: 12
+                            }
+                        }
+                    },
+                    tooltip: {
+                        titleFont: { family: "'Outfit', sans-serif" },
+                        bodyFont: { family: "'Outfit', sans-serif" }
+                    }
+                }
+            }
+        });
+    };
+
+    const renderHazardsChart = (labels, counts) => {
+        if (chartHazardsInstance) {
+            chartHazardsInstance.destroy();
+        }
+
+        const canvas = document.getElementById('chartHazards');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+
+        chartHazardsInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Deviation Count',
+                    data: counts,
+                    backgroundColor: 'rgba(59, 130, 246, 0.45)',
+                    borderColor: 'rgba(59, 130, 246, 0.85)',
+                    borderWidth: 2,
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.05)'
+                        },
+                        ticks: {
+                            color: '#94a3b8',
+                            font: { family: "'Outfit', sans-serif" },
+                            stepSize: 1
+                        }
+                    },
+                    y: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            color: '#94a3b8',
+                            font: { family: "'Outfit', sans-serif" }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        titleFont: { family: "'Outfit', sans-serif" },
+                        bodyFont: { family: "'Outfit', sans-serif" }
+                    }
+                }
+            }
+        });
     };
 });

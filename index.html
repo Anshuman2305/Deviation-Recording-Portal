@@ -14,6 +14,8 @@
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <!-- CSS Stylesheet -->
     <link rel="stylesheet" href="style.css">
+    <!-- Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
@@ -92,6 +94,15 @@
                     <line x1="9" y1="14" x2="15" y2="14"></line>
                 </svg>
                 Open Deviations Manager
+            </button>
+            <button id="tabAnalysis" class="nav-tab" type="button">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+                Analysis Dashboard
             </button>
         </nav>
 
@@ -431,6 +442,66 @@
 
                     <div id="openDevsList" class="open-devs-list">
                         <!-- Cards dynamically inserted here -->
+                    </div>
+                </section>
+            </div>
+
+            <!-- 3. Deviation Analysis Dashboard View Panel -->
+            <div id="analysisView" class="view-panel hidden">
+                <section class="card analysis-card">
+                    <div class="card-header-actions">
+                        <div>
+                            <h2>Deviation Analysis Dashboard</h2>
+                            <p>Real-time safety statistics, classification charts, and hazard metrics.</p>
+                        </div>
+                        <button type="button" id="refreshAnalysisBtn" class="btn btn-secondary btn-refresh"
+                            title="Refresh Analysis">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                style="margin-right: 6px; vertical-align: middle;">
+                                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
+                            </svg>
+                            Refresh
+                        </button>
+                    </div>
+
+                    <!-- Metrics Cards Grid -->
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <span class="metric-label">Total Deviations</span>
+                            <span class="metric-value text-primary" id="statTotalDevs">0</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-label">Open UA / UC</span>
+                            <span class="metric-value text-danger" id="statOpenDevs">0</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-label">Closed UA / UC</span>
+                            <span class="metric-value text-success" id="statClosedDevs">0</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-label">Resolution Rate</span>
+                            <span class="metric-value text-info" id="statResolutionRate">0%</span>
+                        </div>
+                    </div>
+
+                    <!-- Charts Columns Grid -->
+                    <div class="charts-row">
+                        <!-- Pie Chart Column -->
+                        <div class="chart-box">
+                            <h3>Classification (UA vs UC)</h3>
+                            <div class="chart-canvas-wrapper" style="position: relative; height:250px; width:100%">
+                                <canvas id="chartClassification"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Horizontal Bar Chart Column -->
+                        <div class="chart-box">
+                            <h3>Main Hazards Distribution</h3>
+                            <div class="chart-canvas-wrapper" style="position: relative; height:250px; width:100%">
+                                <canvas id="chartHazards"></canvas>
+                            </div>
+                        </div>
                     </div>
                 </section>
             </div>

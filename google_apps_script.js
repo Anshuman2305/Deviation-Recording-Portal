@@ -26,6 +26,9 @@ function doGet(e) {
     if (action === "getOpenDeviations") {
       return getOpenDeviations();
     }
+    if (action === "getAllDeviations") {
+      return getAllDeviations();
+    }
     return ContentService.createTextOutput("GCP Web App Backend is active.")
       .setMimeType(ContentService.MimeType.TEXT);
   } catch (error) {
@@ -65,6 +68,43 @@ function getOpenDeviations() {
           submittedByEmail: row[15]
         });
       }
+    }
+  }
+
+  return ContentService.createTextOutput(JSON.stringify({
+    status: "success",
+    data: data
+  })).setMimeType(ContentService.MimeType.JSON);
+}
+
+function getAllDeviations() {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var lastRow = sheet.getLastRow();
+  var data = [];
+
+  if (lastRow > 1) {
+    var rows = sheet.getRange(2, 1, lastRow - 1, sheet.getLastColumn()).getValues();
+    for (var i = 0; i < rows.length; i++) {
+      var row = rows[i];
+      data.push({
+        rowIndex: i + 2, // Spreadsheet row index (1-based, 2 is first data row)
+        serialNo: row[0],
+        timestamp: row[1],
+        observationDate: row[2],
+        shift: row[3],
+        relay: row[4],
+        shiftIncharge: row[5],
+        classification: row[6],
+        mainHazard: row[7],
+        briefDescription: row[8],
+        deviationPhotos: row[9],
+        responsiblePerson: row[10],
+        actionTaken: row[11],
+        rectificationPhotos: row[12],
+        status: row[13],
+        submittedBy: row[14],
+        submittedByEmail: row[15]
+      });
     }
   }
 
