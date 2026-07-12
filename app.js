@@ -227,6 +227,22 @@ document.addEventListener('DOMContentLoaded', () => {
     // -------------------------------------------------------------
     // Conditional Status Options Checklist (UA / UC Specifics)
     // -------------------------------------------------------------
+    const toggleRectificationPhotosVisibility = () => {
+        const selectedRadio = document.querySelector('input[name="statusSelection"]:checked');
+        const selectedValue = selectedRadio ? selectedRadio.value : '';
+        const rectPhotosContainer = document.getElementById('rectificationPhotosContainer');
+        
+        if (rectPhotosContainer) {
+            if (selectedValue.endsWith('Close')) {
+                rectPhotosContainer.classList.remove('hidden');
+            } else {
+                rectPhotosContainer.classList.add('hidden');
+                rectificationFiles.length = 0;
+                rectificationPreviewGrid.innerHTML = '';
+            }
+        }
+    };
+
     const updateStatusOptions = (classification) => {
         statusChecklistContainer.innerHTML = '';
         const options = classification === 'UA' ?
@@ -266,8 +282,12 @@ document.addEventListener('DOMContentLoaded', () => {
             input.addEventListener('change', () => {
                 const control = statusChecklistContainer.closest('.form-control');
                 if (control) clearControlError(control);
+                toggleRectificationPhotosVisibility();
             });
         });
+
+        // Initialize visibility
+        toggleRectificationPhotosVisibility();
     };
 
     // Watch UA / UC Radio toggles
