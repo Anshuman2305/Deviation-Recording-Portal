@@ -13,7 +13,7 @@
     <!-- Google Identity Services client library -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <!-- CSS Stylesheet -->
-    <link rel="stylesheet" href="style.css?v=1.1">
+    <link rel="stylesheet" href="style.css?v=1.2">
 </head>
 
 <body>
@@ -492,10 +492,22 @@
                                 <table class="dashboard-table" id="tableStatusClassification">
                                     <thead>
                                         <tr>
-                                            <th>Unsafe Act (UA) Open</th>
-                                            <th>Unsafe Act (UA) Closed</th>
-                                            <th>Unsafe Condition (UC) Open</th>
-                                            <th>Unsafe Condition (UC) Closed</th>
+                                            <th>
+                                                <span class="hide-on-mobile">Unsafe Act (UA) Open</span>
+                                                <span class="show-on-mobile">UA Open</span>
+                                            </th>
+                                            <th>
+                                                <span class="hide-on-mobile">Unsafe Act (UA) Closed</span>
+                                                <span class="show-on-mobile">UA Closed</span>
+                                            </th>
+                                            <th>
+                                                <span class="hide-on-mobile">Unsafe Condition (UC) Open</span>
+                                                <span class="show-on-mobile">UC Open</span>
+                                            </th>
+                                            <th>
+                                                <span class="hide-on-mobile">Unsafe Condition (UC) Closed</span>
+                                                <span class="show-on-mobile">UC Closed</span>
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -519,11 +531,26 @@
                                         <tr>
                                             <th>Sl. No.</th>
                                             <th>Hazard Category</th>
-                                            <th>Total Deviations</th>
-                                            <th>UA Open</th>
-                                            <th>UA Closed</th>
-                                            <th>UC Open</th>
-                                            <th>UC Closed</th>
+                                            <th>
+                                                <span class="hide-on-mobile">Total Deviations</span>
+                                                <span class="show-on-mobile">Total</span>
+                                            </th>
+                                            <th>
+                                                <span class="hide-on-mobile">UA Open</span>
+                                                <span class="show-on-mobile">UA O</span>
+                                            </th>
+                                            <th>
+                                                <span class="hide-on-mobile">UA Closed</span>
+                                                <span class="show-on-mobile">UA C</span>
+                                            </th>
+                                            <th>
+                                                <span class="hide-on-mobile">UC Open</span>
+                                                <span class="show-on-mobile">UC O</span>
+                                            </th>
+                                            <th>
+                                                <span class="hide-on-mobile">UC Closed</span>
+                                                <span class="show-on-mobile">UC C</span>
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody id="tbodyHazardDistribution">

@@ -1827,6 +1827,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     color: hsl(var(--text-muted)) !important;
 }
 
+/* Mobile Visibility Utility Classes */
+.show-on-mobile {
+    display: none !important;
+}
+
 @media (max-width: 768px) {
     .metrics-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -1852,6 +1857,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         padding: 10px 12px;
         font-size: 0.85rem;
     }
+
+    .hide-on-mobile {
+        display: none !important;
+    }
+    
+    .show-on-mobile {
+        display: inline !important;
+    }
 }
 
 @media (max-width: 480px) {
@@ -1864,8 +1877,18 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         padding: 12px 14px;
     }
 
+    .dashboard-table-container {
+        padding: 12px 10px;
+    }
+
     .dashboard-table-container h3 {
         font-size: 0.95rem;
         margin-bottom: 12px;
+    }
+
+    .dashboard-table th, 
+    .dashboard-table td {
+        padding: 8px 6px;
+        font-size: 0.78rem;
     }
 }
