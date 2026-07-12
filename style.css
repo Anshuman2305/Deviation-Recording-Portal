@@ -2,28 +2,35 @@
    Deviation Recording Portal - Premium Glassmorphism Theme
    ========================================================================== */
 
-   :root {
+:root {
     --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
     /* Sleek Color Palette */
-    --bg-dark: 222 47% 6%;         /* #060814 - Deep night slate */
-    --primary: 24 100% 50%;         /* Neon Safety Orange */
+    --bg-dark: 222 47% 6%;
+    /* #060814 - Deep night slate */
+    --primary: 24 100% 50%;
+    /* Neon Safety Orange */
     --primary-hover: 24 100% 44%;
     --primary-glow: 24 100% 50% / 0.25;
 
-    --danger: 350 89% 60%;          /* Electric Crimson */
+    --danger: 350 89% 60%;
+    /* Electric Crimson */
     --danger-hover: 350 89% 50%;
     --danger-glow: 350 89% 60% / 0.25;
 
-    --success: 142 72% 45%;         /* Vibrant Emerald Green */
+    --success: 142 72% 45%;
+    /* Vibrant Emerald Green */
     --success-hover: 142 72% 40%;
     --success-glow: 142 72% 45% / 0.25;
 
-    --accent-blue: 217 91% 60%;     /* Rich Cobalt Blue for selections */
+    --accent-blue: 217 91% 60%;
+    /* Rich Cobalt Blue for selections */
     --accent-blue-glow: 217 91% 60% / 0.25;
 
-    --text-primary: 210 40% 98%;    /* Off-white */
-    --text-muted: 215 20% 65%;       /* Cool Slate Gray */
+    --text-primary: 210 40% 98%;
+    /* Off-white */
+    --text-muted: 215 20% 65%;
+    /* Cool Slate Gray */
 
     /* Glassmorphism Tokens */
     --glass-bg: rgba(15, 23, 42, 0.45);
@@ -103,10 +110,12 @@ body {
         transform: scale(1) translate(0, 0);
         opacity: 0.2;
     }
+
     50% {
         transform: scale(1.08) translate(3%, -4%);
         opacity: 0.3;
     }
+
     100% {
         transform: scale(0.95) translate(-3%, 3%);
         opacity: 0.18;
@@ -628,24 +637,24 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 /* Active Segment Configurations */
-#uaSelect:checked ~ label[for="uaSelect"] {
+#uaSelect:checked~label[for="uaSelect"] {
     background: rgba(249, 115, 22, 0.15);
     border: 1px solid rgba(249, 115, 22, 0.3);
     color: #ff914d;
 }
 
-#uaSelect:checked ~ label[for="uaSelect"] .uauc-ua {
+#uaSelect:checked~label[for="uaSelect"] .uauc-ua {
     background: hsl(var(--primary));
     box-shadow: 0 0 10px hsl(var(--primary));
 }
 
-#ucSelect:checked ~ label[for="ucSelect"] {
+#ucSelect:checked~label[for="ucSelect"] {
     background: rgba(16, 185, 129, 0.15);
     border: 1px solid rgba(16, 185, 129, 0.3);
     color: #34d399;
 }
 
-#ucSelect:checked ~ label[for="ucSelect"] .uauc-uc {
+#ucSelect:checked~label[for="ucSelect"] .uauc-uc {
     background: hsl(var(--success));
     box-shadow: 0 0 10px hsl(var(--success));
 }
@@ -720,85 +729,85 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 /* Checked styling for specific status options */
 /* Open state checked */
-.status-check-card input[value$="Open"]:checked + .status-check-label {
+.status-check-card input[value$="Open"]:checked+.status-check-label {
     background: rgba(239, 68, 68, 0.08);
     border-color: rgba(239, 68, 68, 0.35);
 }
 
-.status-check-card input[value$="Open"]:checked + .status-check-label .status-indicator {
+.status-check-card input[value$="Open"]:checked+.status-check-label .status-indicator {
     border-color: hsl(var(--danger));
 }
 
-.status-check-card input[value$="Open"]:checked + .status-check-label .status-indicator::after {
+.status-check-card input[value$="Open"]:checked+.status-check-label .status-indicator::after {
     background: hsl(var(--danger));
     opacity: 1;
     transform: scale(1);
     box-shadow: 0 0 8px hsl(var(--danger));
 }
 
-.status-check-card input[value$="Open"]:checked + .status-check-label .status-title {
+.status-check-card input[value$="Open"]:checked+.status-check-label .status-title {
     color: hsl(var(--danger));
 }
 
 /* Close state checked */
-.status-check-card input[value$="Close"]:checked + .status-check-label {
+.status-check-card input[value$="Close"]:checked+.status-check-label {
     background: rgba(16, 185, 129, 0.08);
     border-color: rgba(16, 185, 129, 0.35);
 }
 
-.status-check-card input[value$="Close"]:checked + .status-check-label .status-indicator {
+.status-check-card input[value$="Close"]:checked+.status-check-label .status-indicator {
     border-color: hsl(var(--success));
 }
 
-.status-check-card input[value$="Close"]:checked + .status-check-label .status-indicator::after {
+.status-check-card input[value$="Close"]:checked+.status-check-label .status-indicator::after {
     background: hsl(var(--success));
     opacity: 1;
     transform: scale(1);
     box-shadow: 0 0 8px hsl(var(--success));
 }
 
-.status-check-card input[value$="Close"]:checked + .status-check-label .status-title {
+.status-check-card input[value$="Close"]:checked+.status-check-label .status-title {
     color: hsl(var(--success));
 }
 
 /* Checked styling for classification options */
-.status-check-card input[value="UA"]:checked + .status-check-label {
+.status-check-card input[value="UA"]:checked+.status-check-label {
     background: rgba(249, 115, 22, 0.08);
     border-color: rgba(249, 115, 22, 0.35);
 }
 
-.status-check-card input[value="UA"]:checked + .status-check-label .status-indicator {
+.status-check-card input[value="UA"]:checked+.status-check-label .status-indicator {
     border-color: #ff914d;
 }
 
-.status-check-card input[value="UA"]:checked + .status-check-label .status-indicator::after {
+.status-check-card input[value="UA"]:checked+.status-check-label .status-indicator::after {
     background: #ff914d;
     opacity: 1;
     transform: scale(1);
     box-shadow: 0 0 8px #ff914d;
 }
 
-.status-check-card input[value="UA"]:checked + .status-check-label .status-title {
+.status-check-card input[value="UA"]:checked+.status-check-label .status-title {
     color: #ff914d;
 }
 
-.status-check-card input[value="UC"]:checked + .status-check-label {
+.status-check-card input[value="UC"]:checked+.status-check-label {
     background: rgba(16, 185, 129, 0.08);
     border-color: rgba(16, 185, 129, 0.35);
 }
 
-.status-check-card input[value="UC"]:checked + .status-check-label .status-indicator {
+.status-check-card input[value="UC"]:checked+.status-check-label .status-indicator {
     border-color: hsl(var(--success));
 }
 
-.status-check-card input[value="UC"]:checked + .status-check-label .status-indicator::after {
+.status-check-card input[value="UC"]:checked+.status-check-label .status-indicator::after {
     background: hsl(var(--success));
     opacity: 1;
     transform: scale(1);
     box-shadow: 0 0 8px hsl(var(--success));
 }
 
-.status-check-card input[value="UC"]:checked + .status-check-label .status-title {
+.status-check-card input[value="UC"]:checked+.status-check-label .status-title {
     color: hsl(var(--success));
 }
 
@@ -932,7 +941,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     bottom: 0;
     left: 0;
     width: 100%;
-    background: linear-gradient(to top, rgba(0,0,0,0.85) 60%, rgba(0,0,0,0));
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 60%, rgba(0, 0, 0, 0));
     padding: 6px 8px;
     font-size: 0.65rem;
     color: rgba(255, 255, 255, 0.85);
@@ -1267,11 +1276,15 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 @keyframes fadeIn {
-    to { opacity: 1; }
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes spin {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 @keyframes cardEnter {
@@ -1279,6 +1292,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         opacity: 0;
         transform: translateY(30px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -1296,6 +1310,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         opacity: 0;
         transform: scale(0.9);
     }
+
     to {
         opacity: 1;
         transform: scale(1);
@@ -1310,6 +1325,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         padding-bottom: 0;
         margin-bottom: 0;
     }
+
     to {
         opacity: 1;
         max-height: 600px;
@@ -1320,10 +1336,23 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    50% { transform: translateX(5px); }
-    75% { transform: translateX(-5px); }
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    50% {
+        transform: translateX(5px);
+    }
+
+    75% {
+        transform: translateX(-5px);
+    }
 }
 
 /* ==========================================================================
@@ -1333,13 +1362,16 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     .form-grid {
         grid-template-columns: 1fr;
     }
+
     .full-width {
         grid-column: span 1;
     }
+
     .app-header {
         flex-direction: column;
         align-items: flex-start;
     }
+
     .user-profile-badge {
         width: 100%;
         justify-content: space-between;
@@ -1403,8 +1435,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 @keyframes shimmer {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
 }
 
 .no-devs-message {
@@ -1611,18 +1648,22 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     .navigation-tabs {
         gap: 8px;
     }
+
     .nav-tab {
         padding: 8px 12px;
         font-size: 0.85rem;
     }
+
     .open-dev-header {
         flex-direction: column;
         align-items: flex-start;
         gap: 10px;
     }
+
     .open-dev-actions {
         width: 100%;
     }
+
     .open-dev-actions button {
         width: 100%;
     }
