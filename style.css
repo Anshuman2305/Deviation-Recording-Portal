@@ -1369,7 +1369,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
     .app-header {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .header-left {
+        text-align: center;
     }
 
     .user-profile-badge {
