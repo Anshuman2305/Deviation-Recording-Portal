@@ -201,17 +201,21 @@
                             <!-- 6. Classification (UA / UC) -->
                             <div class="form-control full-width">
                                 <label>Classification <span class="required">*</span></label>
-                                <div class="radio-group">
-                                    <label class="radio-label">
+                                <div class="status-checklist-container">
+                                    <div class="status-check-card">
                                         <input type="radio" name="uaucClassification" value="UA" id="uaSelect" checked>
-                                        <span class="custom-radio"></span>
-                                        Unsafe Act (UA)
-                                    </label>
-                                    <label class="radio-label">
+                                        <label for="uaSelect" class="status-check-label">
+                                            <span class="status-indicator"></span>
+                                            <span class="status-title">Unsafe Act (UA)</span>
+                                        </label>
+                                    </div>
+                                    <div class="status-check-card">
                                         <input type="radio" name="uaucClassification" value="UC" id="ucSelect">
-                                        <span class="custom-radio"></span>
-                                        Unsafe Condition (UC)
-                                    </label>
+                                        <label for="ucSelect" class="status-check-label">
+                                            <span class="status-indicator"></span>
+                                            <span class="status-title">Unsafe Condition (UC)</span>
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
 

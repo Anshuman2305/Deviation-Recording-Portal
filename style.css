@@ -761,6 +761,47 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     color: hsl(var(--success));
 }
 
+/* Checked styling for classification options */
+.status-check-card input[value="UA"]:checked + .status-check-label {
+    background: rgba(249, 115, 22, 0.08);
+    border-color: rgba(249, 115, 22, 0.35);
+}
+
+.status-check-card input[value="UA"]:checked + .status-check-label .status-indicator {
+    border-color: #ff914d;
+}
+
+.status-check-card input[value="UA"]:checked + .status-check-label .status-indicator::after {
+    background: #ff914d;
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 8px #ff914d;
+}
+
+.status-check-card input[value="UA"]:checked + .status-check-label .status-title {
+    color: #ff914d;
+}
+
+.status-check-card input[value="UC"]:checked + .status-check-label {
+    background: rgba(16, 185, 129, 0.08);
+    border-color: rgba(16, 185, 129, 0.35);
+}
+
+.status-check-card input[value="UC"]:checked + .status-check-label .status-indicator {
+    border-color: hsl(var(--success));
+}
+
+.status-check-card input[value="UC"]:checked + .status-check-label .status-indicator::after {
+    background: hsl(var(--success));
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 8px hsl(var(--success));
+}
+
+.status-check-card input[value="UC"]:checked + .status-check-label .status-title {
+    color: hsl(var(--success));
+}
+
 
 /* ==========================================================================
    Word Counters & Interactive Limits
