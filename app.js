@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // CONFIGURATION: Hardcoded credentials (Change these to your single active credentials)
     const CLIENT_ID = "1084151719721-rf3lhle6mtmdu36nilffnesuq9m0o7ao.apps.googleusercontent.com";
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwa6i5eOTK-O19JHVMet4yex5zlxuwmdJrn7UbtK7oCGaJ_uXzCTxpdYM_nRMkmUZKf_g/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxTT9mYrdyepU86yINvfnm19-mxiqq6dQF7yrWS1LycTCpRsjp2rSU1vj-hkHnxkn9ycA/exec";
 
     // -------------------------------------------------------------
     // Local Configuration Settings (Google Sheets URL & Client ID)
@@ -708,9 +708,9 @@ document.addEventListener('DOMContentLoaded', () => {
         successOverlay.classList.add('hidden');
         form.reset();
 
-        // Reset state variables
-        deviationFiles = [];
-        rectificationFiles = [];
+        // Reset state variables in-place to preserve closure references
+        deviationFiles.length = 0;
+        rectificationFiles.length = 0;
         deviationPreviewGrid.innerHTML = '';
         rectificationPreviewGrid.innerHTML = '';
 
@@ -909,7 +909,7 @@ document.addEventListener('DOMContentLoaded', () => {
         closeActionTextarea.value = '';
         closeActionWordCounter.textContent = '0 / 30 words';
         closeActionWordCounter.className = 'word-counter';
-        closeFiles = [];
+        closeFiles.length = 0;
         closePreviewGrid.innerHTML = '';
 
         closeDeviationForm.querySelectorAll('.form-control').forEach(ctrl => {

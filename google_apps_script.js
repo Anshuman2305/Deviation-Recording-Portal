@@ -38,7 +38,7 @@ function getOpenDeviations() {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   var lastRow = sheet.getLastRow();
   var data = [];
-  
+
   if (lastRow > 1) {
     var rows = sheet.getRange(2, 1, lastRow - 1, sheet.getLastColumn()).getValues();
     for (var i = 0; i < rows.length; i++) {
@@ -67,7 +67,7 @@ function getOpenDeviations() {
       }
     }
   }
-  
+
   return ContentService.createTextOutput(JSON.stringify({
     status: "success",
     data: data
@@ -82,7 +82,7 @@ function doPost(e) {
     }
 
     var data = JSON.parse(e.postData.contents);
-    
+
     // Route Close Deviation Action
     if (data.action === "closeDeviation") {
       return closeDeviation(data);
@@ -346,17 +346,17 @@ function sendEmailAlert(serialNo, data, deviationPhotoUrls) {
 function closeDeviation(data) {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   var rowIndex = parseInt(data.rowIndex, 10);
-  
+
   if (!rowIndex || rowIndex < 2 || rowIndex > sheet.getLastRow()) {
     throw new Error("Invalid row index provided: " + rowIndex);
   }
-  
+
   // Verify the Serial Number matches to prevent mismatch
   var sheetSerialNo = sheet.getRange(rowIndex, 1).getValue();
   if (sheetSerialNo.toString() !== data.serialNo.toString()) {
     throw new Error("Row index mismatch. Expected Serial No: " + data.serialNo + ", found: " + sheetSerialNo);
   }
-  
+
   // Dynamically add columns 17-20 if sheet doesn't have them
   var lastCol = sheet.getLastColumn();
   if (lastCol < 20) {
@@ -371,18 +371,18 @@ function closeDeviation(data) {
       .setBackground("#f1f5f9")
       .setBorder(true, true, true, true, true, true, "#cbd5e1", SpreadsheetApp.BorderStyle.SOLID);
   }
-  
+
   // Update status, action taken, and metadata first (always succeeds)
   var classification = sheet.getRange(rowIndex, 7).getValue(); // Column 7
   var newStatus = classification === "UA" ? "UA Close" : "UC Close";
-  
+
   sheet.getRange(rowIndex, 12).setValue(data.actionTaken); // Column 12 (Action Taken)
   sheet.getRange(rowIndex, 14).setValue(newStatus); // Column 14 (Status)
   sheet.getRange(rowIndex, 17).setValue(data.closedBy); // Column 17 (Closed By)
   sheet.getRange(rowIndex, 18).setValue(data.dateOfClosing); // Column 18 (Date of Closing)
   sheet.getRange(rowIndex, 19).setValue(data.closingRelay); // Column 19 (Closing Relay)
   sheet.getRange(rowIndex, 20).setValue(data.closingShift); // Column 20 (Closing Shift)
-  
+
   // Upload rectification photos safely in a try-catch to protect status update
   var photosCellContent = "No photos uploaded.";
   if (data.rectificationPhotos && data.rectificationPhotos.length > 0) {
@@ -396,9 +396,9 @@ function closeDeviation(data) {
       Logger.log("Rectification photo upload failed: " + e.toString());
     }
   }
-  
+
   sheet.getRange(rowIndex, 13).setValue(photosCellContent); // Column 13 (Rectification Photos)
-  
+
   return ContentService.createTextOutput(JSON.stringify({
     status: "success",
     message: "Deviation #" + data.serialNo + " closed successfully."
