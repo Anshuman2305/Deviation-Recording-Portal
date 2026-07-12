@@ -328,6 +328,17 @@
                                     words).</span>
                             </div>
 
+                            <!-- 13. Status Selection (Conditional Checklist - UA vs UC) -->
+                            <div class="form-control full-width">
+                                <label>Status <span class="required">*</span></label>
+
+                                <!-- Dynamic checklist loaded via JavaScript -->
+                                <div class="status-checklist-container" id="statusChecklistContainer">
+                                    <!-- Choices dynamically inserted here by script -->
+                                </div>
+                                <span class="error-message" id="statusSelectionError">Please select a status.</span>
+                            </div>
+
                             <!-- 12. Photo after Rectification (Max 5 files, 10MB size each) -->
                             <div class="form-control full-width hidden" id="rectificationPhotosContainer">
                                 <label>Photo after Rectification <span class="badge-optional">(Max 5 files, 10MB
@@ -353,17 +364,6 @@
                                 <div class="preview-grid" id="rectificationPreviewGrid"></div>
                                 <span class="error-message" id="rectificationPhotoUploadError">File errors occurred. Please
                                     check file count or sizes.</span>
-                            </div>
-
-                            <!-- 13. Status Selection (Conditional Checklist - UA vs UC) -->
-                            <div class="form-control full-width">
-                                <label>Status <span class="required">*</span></label>
-
-                                <!-- Dynamic checklist loaded via JavaScript -->
-                                <div class="status-checklist-container" id="statusChecklistContainer">
-                                    <!-- Choices dynamically inserted here by script -->
-                                </div>
-                                <span class="error-message" id="statusSelectionError">Please select a status.</span>
                             </div>
 
                         </div>
