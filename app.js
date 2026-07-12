@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // CONFIGURATION: Hardcoded credentials (Change these to your single active credentials)
     const CLIENT_ID = "1084151719721-rf3lhle6mtmdu36nilffnesuq9m0o7ao.apps.googleusercontent.com";
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyUp0fkiZ4iQJ9yHW6BJxAXICF-yAvmgDxiKh4vJFQsfQC1mOFWf8kuMN7AH5nz1Z2fEQ/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxmDgLMQw7iq9lNKQQ7WkYPug8kRaSHJQTwpM09BYBdAwDF9xHU3-HS3NU__qFSh6BgWg/exec";
 
     // -------------------------------------------------------------
     // Local Configuration Settings (Google Sheets URL & Client ID)
@@ -808,8 +808,8 @@ document.addEventListener('DOMContentLoaded', () => {
             renderAnalysisDashboard(unfilteredAnalysisData);
         } else {
             const filtered = unfilteredAnalysisData.filter(d => {
-                if (!d.observationDate) return false;
-                return d.observationDate.startsWith(val);
+                const ym = parseYearMonth(d.observationDate);
+                return ym === val;
             });
             renderAnalysisDashboard(filtered);
         }
@@ -1307,17 +1307,37 @@ document.addEventListener('DOMContentLoaded', () => {
         renderAnalysisDashboard(unfilteredAnalysisData);
     };
 
+    const parseYearMonth = (dateStr) => {
+        if (!dateStr) return null;
+        
+        // Handle standard YYYY-MM-DD strings (like mock data)
+        if (dateStr.length === 10 && dateStr.includes('-')) {
+            const parts = dateStr.split('-');
+            if (parts.length >= 2) {
+                return `${parts[0]}-${parts[1]}`;
+            }
+        }
+        
+        // Handle ISO strings with local timezone offset correction
+        const d = new Date(dateStr);
+        if (!isNaN(d.getTime())) {
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            return `${year}-${month}`;
+        }
+        
+        return null;
+    };
+
     const populateMonthFilter = (data) => {
         // Reset option list to only "All Months"
         filterMonth.innerHTML = '<option value="all">All Months</option>';
 
         const monthsSet = new Set();
         data.forEach(d => {
-            if (d.observationDate) {
-                const parts = d.observationDate.split('-');
-                if (parts.length >= 2) {
-                    monthsSet.add(`${parts[0]}-${parts[1]}`);
-                }
+            const ym = parseYearMonth(d.observationDate);
+            if (ym) {
+                monthsSet.add(ym);
             }
         });
 
@@ -1333,7 +1353,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const [year, month] = mStr.split('-');
             const monthIndex = parseInt(month, 10) - 1;
             const monthName = MONTH_NAMES[monthIndex] || month;
-            
+
             const opt = document.createElement('option');
             opt.value = mStr;
             opt.textContent = `${monthName} ${year}`;
@@ -1404,7 +1424,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ucClosed: 0
                 };
             }
-            
+
             hazardStats[h].total++;
 
             if (d.standardClassification === 'UA') {
