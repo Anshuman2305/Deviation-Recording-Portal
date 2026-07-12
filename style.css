@@ -1391,6 +1391,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     margin-bottom: 25px;
     border-bottom: 1px solid var(--glass-border);
     padding-bottom: 12px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.navigation-tabs::-webkit-scrollbar {
+    display: none;
 }
 
 .nav-tab {
@@ -1407,6 +1414,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     align-items: center;
     gap: 8px;
     transition: var(--transition-smooth);
+    white-space: nowrap;
 }
 
 .nav-tab:hover {
@@ -1774,15 +1782,41 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 @media (max-width: 768px) {
     .metrics-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    
+    .metric-card {
+        padding: 14px 16px;
+        gap: 4px;
+    }
+    
+    .metric-value {
+        font-size: 1.6rem;
     }
     
     .charts-row {
         grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .chart-box {
+        padding: 16px;
     }
 }
 
 @media (max-width: 480px) {
     .metrics-grid {
         grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    
+    .metric-card {
+        padding: 12px 14px;
+    }
+
+    .chart-box h3 {
+        font-size: 0.95rem;
+        margin-bottom: 12px;
     }
 }

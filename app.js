@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // CONFIGURATION: Hardcoded credentials (Change these to your single active credentials)
     const CLIENT_ID = "1084151719721-rf3lhle6mtmdu36nilffnesuq9m0o7ao.apps.googleusercontent.com";
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby_cn8W1HxDdLVst4XPGd1DV_pny6c2j2_VaCa2qZC2DlnmjDIyMX3LnYlt-5UT07ilbw/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyUp0fkiZ4iQJ9yHW6BJxAXICF-yAvmgDxiKh4vJFQsfQC1mOFWf8kuMN7AH5nz1Z2fEQ/exec";
 
     // -------------------------------------------------------------
     // Local Configuration Settings (Google Sheets URL & Client ID)
@@ -244,7 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const selectedRadio = document.querySelector('input[name="statusSelection"]:checked');
         const selectedValue = selectedRadio ? selectedRadio.value : '';
         const rectPhotosContainer = document.getElementById('rectificationPhotosContainer');
-        
+
         if (rectPhotosContainer) {
             if (selectedValue.endsWith('Close')) {
                 rectPhotosContainer.classList.remove('hidden');
@@ -1404,6 +1404,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 indexAxis: 'y',
                 responsive: true,
                 maintainAspectRatio: false,
+                layout: {
+                    padding: {
+                        left: 10,
+                        right: 15,
+                        top: 5,
+                        bottom: 5
+                    }
+                },
                 scales: {
                     x: {
                         grid: {
@@ -1421,7 +1429,14 @@ document.addEventListener('DOMContentLoaded', () => {
                         },
                         ticks: {
                             color: '#94a3b8',
-                            font: { family: "'Outfit', sans-serif" }
+                            font: { family: "'Outfit', sans-serif" },
+                            callback: function(value, index) {
+                                const label = labels[index] || '';
+                                if (label && label.length > 15) {
+                                    return label.substring(0, 12) + '...';
+                                }
+                                return label;
+                            }
                         }
                     }
                 },
