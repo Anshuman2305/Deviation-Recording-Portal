@@ -1513,6 +1513,56 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 /* Close Modal styles */
 .close-modal {
     animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 25px;
+}
+
+.close-modal form {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex: 1;
+}
+
+.close-modal .modal-body {
+    overflow-y: auto;
+    flex: 1;
+    padding-right: 8px;
+    margin-top: 15px;
+}
+
+/* Custom Scrollbar for Modal Body */
+.close-modal .modal-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.close-modal .modal-body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.close-modal .modal-body::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 3px;
+}
+
+.close-modal .modal-body::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 107, 0, 0.3);
+}
+
+.close-modal .modal-footer {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid var(--glass-border);
+}
+
+.close-modal .modal-footer button {
+    width: auto;
 }
 
 /* Mobile responsive styles */

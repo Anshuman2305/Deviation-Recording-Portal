@@ -209,8 +209,12 @@ function uploadPhotosToDrive(folderName, photosList) {
     // Write file to Drive folder
     var file = folder.createFile(blob);
 
-    // Authorize public link permissions
-    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    // Authorize public link permissions safely
+    try {
+      file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    } catch (e) {
+      Logger.log("Public sharing permissions warning: " + e.toString());
+    }
 
     urls.push(file.getUrl());
   }
