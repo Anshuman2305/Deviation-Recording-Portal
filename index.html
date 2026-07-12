@@ -49,7 +49,7 @@
     <div id="appContainer" class="app-container hidden">
         <header class="app-header">
             <div class="header-left">
-                <div class="header-pretitle">Pakri Barwadih Coal Mining Project</div>
+                <div class="header-pretitle">Pakri Barwadih North West Coal Mining Project</div>
                 <h1>Deviation Recording Portal</h1>
                 <p class="subtitle">Log, manage, and rectify deviations to maintain absolute safety standards.</p>
             </div>
@@ -74,7 +74,8 @@
         <!-- View Navigation Tabs -->
         <nav class="navigation-tabs">
             <button id="tabReport" class="nav-tab active" type="button">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                     <polyline points="14 2 14 8 20 8"></polyline>
                     <line x1="16" y1="13" x2="8" y2="13"></line>
@@ -84,7 +85,8 @@
                 Report Deviation
             </button>
             <button id="tabManage" class="nav-tab" type="button">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
                     <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
                     <line x1="12" y1="11" x2="12" y2="17"></line>
                     <line x1="9" y1="14" x2="15" y2="14"></line>
@@ -103,7 +105,8 @@
 
                             <!-- 1. Serial Number (Auto-assigned representation) -->
                             <div class="form-control">
-                                <label for="serialNumber">S No. <span class="badge-optional">(Auto-Generated)</span></label>
+                                <label for="serialNumber">S No. <span
+                                        class="badge-optional">(Auto-Generated)</span></label>
                                 <div class="input-wrapper disabled">
                                     <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none"
                                         stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -113,8 +116,8 @@
                                         <line x1="10" y1="3" x2="8" y2="21" />
                                         <line x1="16" y1="3" x2="14" y2="21" />
                                     </svg>
-                                    <input type="text" id="serialNumber" name="serialNumber" value="Auto-assign on submit"
-                                        readonly tabindex="-1">
+                                    <input type="text" id="serialNumber" name="serialNumber"
+                                        value="Auto-assign on submit" readonly tabindex="-1">
                                 </div>
                             </div>
 
@@ -195,7 +198,8 @@
                                     <input type="text" id="shiftIncharge" name="shiftIncharge"
                                         placeholder="Enter name of Shift Incharge / Person Observed" required>
                                 </div>
-                                <span class="error-message" id="shiftInchargeError">Shift Incharge name is required.</span>
+                                <span class="error-message" id="shiftInchargeError">Shift Incharge name is
+                                    required.</span>
                             </div>
 
                             <!-- 6. Classification (UA / UC) -->
@@ -237,10 +241,12 @@
                                         <option value="Dump Slope Stability">Dump Slope Stability</option>
                                         <option value="Dumping">Dumping</option>
                                         <option value="Explosives & Blasting">Explosives & Blasting</option>
-                                        <option value="Securing mine area from unauthorized entry">Securing mine area from
+                                        <option value="Securing mine area from unauthorized entry">Securing mine area
+                                            from
                                             unauthorized entry</option>
                                         <option value="Pumping">Pumping</option>
-                                        <option value="Repair & Maintenance of HEMM">Repair & Maintenance of HEMM</option>
+                                        <option value="Repair & Maintenance of HEMM">Repair & Maintenance of HEMM
+                                        </option>
                                         <option value="Repair & Maintenance of Dumpers">Repair & Maintenance of Dumpers
                                         </option>
                                         <option value="Mine power distribution & Transmission of Supply">Mine power
@@ -259,12 +265,14 @@
                             <!-- 8. Brief Description (Max 50 words) -->
                             <div class="form-control full-width">
                                 <div class="label-with-counter">
-                                    <label for="briefDescription">Brief Description <span class="required">*</span></label>
+                                    <label for="briefDescription">Brief Description <span
+                                            class="required">*</span></label>
                                     <span class="word-counter" id="descriptionWordCounter">0 / 50 words</span>
                                 </div>
                                 <div class="textarea-wrapper">
                                     <textarea id="briefDescription" name="briefDescription"
-                                        placeholder="Describe the safety deviation clearly..." rows="3" required></textarea>
+                                        placeholder="Describe the safety deviation clearly..." rows="3"
+                                        required></textarea>
                                 </div>
                                 <span class="error-message" id="briefDescriptionError">Description is required (Max 50
                                     words).</span>
@@ -298,7 +306,8 @@
 
                             <!-- 10. Responsible Person -->
                             <div class="form-control full-width">
-                                <label for="responsiblePerson">Responsible Person <span class="required">*</span></label>
+                                <label for="responsiblePerson">Responsible Person <span
+                                        class="required">*</span></label>
                                 <div class="input-wrapper">
                                     <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none"
                                         stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -324,7 +333,8 @@
                                         placeholder="Detail the immediate corrective action taken..." rows="2"
                                         required></textarea>
                                 </div>
-                                <span class="error-message" id="actionTakenError">Action taken detail is required (Max 30
+                                <span class="error-message" id="actionTakenError">Action taken detail is required (Max
+                                    30
                                     words).</span>
                             </div>
 
@@ -362,7 +372,8 @@
                                 </div>
                                 <!-- Preview grid -->
                                 <div class="preview-grid" id="rectificationPreviewGrid"></div>
-                                <span class="error-message" id="rectificationPhotoUploadError">File errors occurred. Please
+                                <span class="error-message" id="rectificationPhotoUploadError">File errors occurred.
+                                    Please
                                     check file count or sizes.</span>
                             </div>
 
@@ -391,24 +402,28 @@
                             <h2>Open Deviations Manager</h2>
                             <p>Select an unresolved deviation below to document its closure details.</p>
                         </div>
-                        <button type="button" id="refreshOpenDevsBtn" class="btn btn-secondary btn-refresh" title="Refresh List">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: middle;">
-                                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+                        <button type="button" id="refreshOpenDevsBtn" class="btn btn-secondary btn-refresh"
+                            title="Refresh List">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                style="margin-right: 6px; vertical-align: middle;">
+                                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
                             </svg>
                             Refresh
                         </button>
                     </div>
-                    
+
                     <div id="openDevsLoader" class="open-devs-loader hidden">
                         <div class="skeleton-card"></div>
                         <div class="skeleton-card"></div>
                         <div class="skeleton-card"></div>
                     </div>
-                    
+
                     <div id="noOpenDevsMessage" class="no-devs-message hidden">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10"/>
-                            <path d="M8 12h8"/>
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M8 12h8" />
                         </svg>
                         <h3>No Open Deviations Found</h3>
                         <p>All deviations have been successfully rectified and closed!</p>
@@ -489,18 +504,19 @@
                 <h2>Close Safety Deviation</h2>
                 <p>Submit rectification details to update the record status.</p>
             </div>
-            
+
             <form id="closeDeviationForm" novalidate>
                 <input type="hidden" id="closeRowIndex">
                 <input type="hidden" id="closeSerialNo">
-                
+
                 <div class="modal-body form-grid" style="grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;">
-                    
+
                     <!-- 1. Close Observer Name -->
                     <div class="form-control" style="grid-column: span 2;">
                         <label for="closeName">Closed By <span class="required">*</span></label>
                         <div class="input-wrapper disabled">
-                            <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                                 <circle cx="12" cy="7" r="4" />
                             </svg>
@@ -512,7 +528,8 @@
                     <div class="form-control">
                         <label for="closeDate">Date of Closing <span class="required">*</span></label>
                         <div class="input-wrapper">
-                            <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
                                 <line x1="16" y1="2" x2="16" y2="6" />
                                 <line x1="8" y1="2" x2="8" y2="6" />
@@ -527,7 +544,8 @@
                     <div class="form-control">
                         <label for="closeShift">Closing Shift <span class="required">*</span></label>
                         <div class="input-wrapper">
-                            <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <circle cx="12" cy="12" r="10" />
                                 <polyline points="12 6 12 12 16 14" />
                             </svg>
@@ -546,7 +564,8 @@
                     <div class="form-control" style="grid-column: span 2;">
                         <label for="closeRelay">Closing Relay <span class="required">*</span></label>
                         <div class="input-wrapper">
-                            <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                                 <circle cx="9" cy="7" r="4" />
                                 <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
@@ -566,33 +585,43 @@
 
                     <!-- 5. Action Taken (Max 30 words) -->
                     <div class="form-control full-width" style="grid-column: span 2;">
-                        <div class="label-with-counter" style="display: flex; justify-content: space-between; align-items: center;">
+                        <div class="label-with-counter"
+                            style="display: flex; justify-content: space-between; align-items: center;">
                             <label for="closeAction">Action Taken <span class="required">*</span></label>
                             <span class="word-counter" id="closeActionWordCounter">0 / 30 words</span>
                         </div>
                         <div class="textarea-wrapper">
-                            <textarea id="closeAction" name="closeAction" placeholder="Detail the rectification action taken..." rows="2" required></textarea>
+                            <textarea id="closeAction" name="closeAction"
+                                placeholder="Detail the rectification action taken..." rows="2" required></textarea>
                         </div>
-                        <span class="error-message" id="closeActionError">Action taken detail is required (Max 30 words).</span>
+                        <span class="error-message" id="closeActionError">Action taken detail is required (Max 30
+                            words).</span>
                     </div>
 
                     <!-- 6. Photos after Rectification (Max 5 files, 10MB size each) -->
                     <div class="form-control full-width" style="grid-column: span 2;">
-                        <label>Photos after Rectification <span class="badge-optional">(Max 5 files, 10MB each)</span></label>
+                        <label>Photos after Rectification <span class="badge-optional">(Max 5 files, 10MB
+                                each)</span></label>
                         <div class="upload-dropzone" id="closeDropzone">
-                            <input type="file" id="closePhotoUpload" name="closePhotoUpload" multiple accept="image/*" class="file-input-hidden">
+                            <input type="file" id="closePhotoUpload" name="closePhotoUpload" multiple accept="image/*"
+                                class="file-input-hidden">
                             <div class="dropzone-content">
-                                <svg class="upload-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <svg class="upload-icon" width="36" height="36" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
                                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                                     <polyline points="17 8 12 3 7 8" />
                                     <line x1="12" y1="3" x2="12" y2="15" />
                                 </svg>
-                                <p class="dropzone-text-primary">Drag &amp; drop rectification photos or <span>browse</span></p>
+                                <p class="dropzone-text-primary">Drag &amp; drop rectification photos or
+                                    <span>browse</span>
+                                </p>
                                 <p class="dropzone-text-secondary">Image files only, max 10MB per file</p>
                             </div>
                         </div>
                         <div class="preview-grid" id="closePreviewGrid"></div>
-                        <span class="error-message" id="closePhotoUploadError">File errors occurred. Please check file count or sizes.</span>
+                        <span class="error-message" id="closePhotoUploadError">File errors occurred. Please check file
+                            count or sizes.</span>
                     </div>
                 </div>
 

@@ -981,7 +981,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .form-actions {
     margin-top: 15px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
 }
 
 .btn {
@@ -1667,4 +1667,19 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     .open-dev-actions button {
         width: 100%;
     }
+}
+
+/* App Footer Styling */
+.app-footer {
+    width: 100%;
+    text-align: center;
+    padding: 20px 0 40px 0;
+    margin-top: 15px;
+    border-top: 1px solid var(--glass-border);
+}
+
+.app-footer p {
+    font-size: 0.85rem;
+    color: hsl(var(--text-muted));
+    margin: 0;
 }
