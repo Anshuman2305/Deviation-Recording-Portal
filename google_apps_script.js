@@ -276,7 +276,7 @@ function sendEmailAlert(serialNo, data, deviationPhotoUrls) {
     return;
   }
 
-  var subject = "[SAFETY ALERT] Open Deviation Logged - S No. " + serialNo + " (" + data.classification + ")";
+  var subject = "[OPEN DEVIATION ALERT] Open Deviation Logged - S No. " + serialNo + " (" + data.status + ")";
 
   // Format photos list into HTML links
   var photoHtml = "No photos uploaded.";
@@ -293,13 +293,12 @@ function sendEmailAlert(serialNo, data, deviationPhotoUrls) {
     '<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">' +
     // Header
     '<div style="background-color: #ef4444; color: #ffffff; padding: 20px; text-align: center;">' +
-    '<h2 style="margin: 0; font-size: 20px; font-weight: 700; letter-spacing: 0.5px;">MINING OPERATIONS SAFETY ALERT</h2>' +
-    '<p style="margin: 5px 0 0 0; opacity: 0.9; font-size: 14px;">An unresolved deviation (Status: ' + data.status + ') has been recorded.</p>' +
+    '<h2 style="margin: 0; font-size: 20px; font-weight: 700; letter-spacing: 0.5px;">OPEN DEVIATION ALERT</h2>' +
+    '<p style="margin: 5px 0 0 0; opacity: 0.9; font-size: 14px;">An unresolved deviation (' + data.status + ') has been recorded.</p>' +
     '</div>' +
 
     // Body Content
     '<div style="padding: 24px; background-color: #ffffff; color: #334155; line-height: 1.6;">' +
-    '<p style="margin-top: 0; font-size: 15px;">Hello Safety Team,</p>' +
     '<p style="font-size: 14px;">Please find the details of the open safety deviation reported on the portal below:</p>' +
 
     // Metadata Table
@@ -322,11 +321,11 @@ function sendEmailAlert(serialNo, data, deviationPhotoUrls) {
     '<td style="padding: 10px; border: 1px solid #e2e8f0;">' + data.shiftIncharge + '</td>' +
     '</tr>' +
     '<tr style="background-color: #f8fafc;">' +
-    '<td style="padding: 10px; border: 1px solid #e2e8f0; font-weight: bold;">Classification:</td>' +
-    '<td style="padding: 10px; border: 1px solid #e2e8f0; font-weight: bold; color: #ef4444;">' + data.classification + ' (' + data.status + ')</td>' +
+    '<td style="padding: 10px; border: 1px solid #e2e8f0; font-weight: bold;">Deviation Type:</td>' +
+    '<td style="padding: 10px; border: 1px solid #e2e8f0; font-weight: bold; color: #ef4444;">' + data.status + '</td>' +
     '</tr>' +
     '<tr>' +
-    '<td style="padding: 10px; border: 1px solid #e2e8f0; font-weight: bold;">Main Hazard Category:</td>' +
+    '<td style="padding: 10px; border: 1px solid #e2e8f0; font-weight: bold;">Main Hazard:</td>' +
     '<td style="padding: 10px; border: 1px solid #e2e8f0;">' + data.mainHazard + '</td>' +
     '</tr>' +
     '<tr style="background-color: #f8fafc;">' +
@@ -364,7 +363,7 @@ function sendEmailAlert(serialNo, data, deviationPhotoUrls) {
     // Footer
     '<div style="background-color: #f8fafc; padding: 16px; border-top: 1px solid #e2e8f0; text-align: center; font-size: 11px; color: #94a3b8;">' +
     'This is an automated safety alert generated from the Mining Deviation Recording Portal.<br/>' +
-    '&copy; 2026 Mining Safety Division. All rights reserved.' +
+    '&copy; 2026 PBNW Safety Department' +
     '</div>' +
     '</div>';
 
