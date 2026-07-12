@@ -20,6 +20,60 @@
 // CONFIGURATION: Set the recipient email address for open deviation alerts
 var NOTIFICATION_EMAIL = "anshumanmohanty.docs@gmail.com";
 
+function doGet(e) {
+  try {
+    var action = e.parameter.action;
+    if (action === "getOpenDeviations") {
+      return getOpenDeviations();
+    }
+    return ContentService.createTextOutput("GCP Web App Backend is active.")
+      .setMimeType(ContentService.MimeType.TEXT);
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({ status: "error", message: error.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function getOpenDeviations() {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var lastRow = sheet.getLastRow();
+  var data = [];
+  
+  if (lastRow > 1) {
+    var rows = sheet.getRange(2, 1, lastRow - 1, sheet.getLastColumn()).getValues();
+    for (var i = 0; i < rows.length; i++) {
+      var row = rows[i];
+      var status = row[13]; // Status is Column 14 (Index 13)
+      if (status === "UA Open" || status === "UC Open") {
+        data.push({
+          rowIndex: i + 2, // Spreadsheet row index (1-based, 2 is first data row)
+          serialNo: row[0],
+          timestamp: row[1],
+          observationDate: row[2],
+          shift: row[3],
+          relay: row[4],
+          shiftIncharge: row[5],
+          classification: row[6],
+          mainHazard: row[7],
+          briefDescription: row[8],
+          deviationPhotos: row[9],
+          responsiblePerson: row[10],
+          actionTaken: row[11],
+          rectificationPhotos: row[12],
+          status: status,
+          submittedBy: row[14],
+          submittedByEmail: row[15]
+        });
+      }
+    }
+  }
+  
+  return ContentService.createTextOutput(JSON.stringify({
+    status: "success",
+    data: data
+  })).setMimeType(ContentService.MimeType.JSON);
+}
+
 function doPost(e) {
   try {
     // 1. Parse incoming JSON data
@@ -28,6 +82,11 @@ function doPost(e) {
     }
 
     var data = JSON.parse(e.postData.contents);
+    
+    // Route Close Deviation Action
+    if (data.action === "closeDeviation") {
+      return closeDeviation(data);
+    }
 
     // 2. Open active sheet and check/create headers if empty
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
@@ -269,4 +328,57 @@ function sendEmailAlert(serialNo, data, deviationPhotoUrls) {
   } catch (err) {
     Logger.log("Failed to send email alert: " + err.toString());
   }
+}
+
+/**
+ * Updates an open deviation row in the spreadsheet to mark it closed.
+ */
+function closeDeviation(data) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var rowIndex = parseInt(data.rowIndex, 10);
+  
+  if (!rowIndex || rowIndex < 2 || rowIndex > sheet.getLastRow()) {
+    throw new Error("Invalid row index provided: " + rowIndex);
+  }
+  
+  // Verify the Serial Number matches to prevent mismatch
+  var sheetSerialNo = sheet.getRange(rowIndex, 1).getValue();
+  if (sheetSerialNo.toString() !== data.serialNo.toString()) {
+    throw new Error("Row index mismatch. Expected Serial No: " + data.serialNo + ", found: " + sheetSerialNo);
+  }
+  
+  // Dynamically add columns 17-20 if sheet doesn't have them
+  var lastCol = sheet.getLastColumn();
+  if (lastCol < 20) {
+    sheet.getRange(1, 17, 1, 4).setValues([[
+      "Closed By",
+      "Date of Closing",
+      "Closing Relay",
+      "Closing Shift"
+    ]]);
+    sheet.getRange(1, 17, 1, 4)
+      .setFontWeight("bold")
+      .setBackground("#f1f5f9")
+      .setBorder(true, true, true, true, true, true, "#cbd5e1", SpreadsheetApp.BorderStyle.SOLID);
+  }
+  
+  // Upload rectification photos
+  var rectificationPhotoUrls = uploadPhotosToDrive("Rectification Photos", data.rectificationPhotos);
+  
+  // Update cell values
+  var classification = sheet.getRange(rowIndex, 7).getValue(); // Column 7
+  var newStatus = classification === "UA" ? "UA Close" : "UC Close";
+  
+  sheet.getRange(rowIndex, 12).setValue(data.actionTaken); // Column 12 (Action Taken)
+  sheet.getRange(rowIndex, 13).setValue(rectificationPhotoUrls.join("\n")); // Column 13 (Rectification Photos)
+  sheet.getRange(rowIndex, 14).setValue(newStatus); // Column 14 (Status)
+  sheet.getRange(rowIndex, 17).setValue(data.closedBy); // Column 17 (Closed By)
+  sheet.getRange(rowIndex, 18).setValue(data.dateOfClosing); // Column 18 (Date of Closing)
+  sheet.getRange(rowIndex, 19).setValue(data.closingRelay); // Column 19 (Closing Relay)
+  sheet.getRange(rowIndex, 20).setValue(data.closingShift); // Column 20 (Closing Shift)
+  
+  return ContentService.createTextOutput(JSON.stringify({
+    status: "success",
+    message: "Deviation #" + data.serialNo + " closed successfully."
+  })).setMimeType(ContentService.MimeType.JSON);
 }

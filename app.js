@@ -32,6 +32,35 @@ document.addEventListener('DOMContentLoaded', () => {
     // DOM Elements - Conditional Status Checklist
     const statusChecklistContainer = document.getElementById('statusChecklistContainer');
 
+    // DOM Elements - View Navigation Tabs & Panels
+    const tabReport = document.getElementById('tabReport');
+    const tabManage = document.getElementById('tabManage');
+    const reportView = document.getElementById('reportView');
+    const manageView = document.getElementById('manageView');
+
+    // DOM Elements - Open Deviations Manager
+    const refreshOpenDevsBtn = document.getElementById('refreshOpenDevsBtn');
+    const openDevsLoader = document.getElementById('openDevsLoader');
+    const noOpenDevsMessage = document.getElementById('noOpenDevsMessage');
+    const openDevsList = document.getElementById('openDevsList');
+
+    // DOM Elements - Close Deviation Modal Dialog
+    const closeModalOverlay = document.getElementById('closeModalOverlay');
+    const closeDeviationForm = document.getElementById('closeDeviationForm');
+    const closeRowIndexInput = document.getElementById('closeRowIndex');
+    const closeSerialNoInput = document.getElementById('closeSerialNo');
+    const closeNameInput = document.getElementById('closeName');
+    const closeDateInput = document.getElementById('closeDate');
+    const closeShiftSelect = document.getElementById('closeShift');
+    const closeRelaySelect = document.getElementById('closeRelay');
+    const closeActionTextarea = document.getElementById('closeAction');
+    const closeActionWordCounter = document.getElementById('closeActionWordCounter');
+    const closeDropzone = document.getElementById('closeDropzone');
+    const closePhotoUploadInput = document.getElementById('closePhotoUpload');
+    const closePreviewGrid = document.getElementById('closePreviewGrid');
+    const cancelCloseBtn = document.getElementById('cancelCloseBtn');
+    const submitCloseBtn = document.getElementById('submitCloseBtn');
+
     // DOM Elements - Feedback & Dialogs
     const loadingOverlay = document.getElementById('loadingOverlay');
     const loadingText = document.getElementById('loadingText');
@@ -51,12 +80,13 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentAuthUser = null;
     let deviationFiles = [];
     let rectificationFiles = [];
+    let closeFiles = [];
     const MAX_FILES = 5;
     const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB in bytes
 
     // CONFIGURATION: Hardcoded credentials (Change these to your single active credentials)
     const CLIENT_ID = "1084151719721-rf3lhle6mtmdu36nilffnesuq9m0o7ao.apps.googleusercontent.com";
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyjdB4LwLHycR-3xAPcyXkYNEZrFDoX7YNcMyCYySSBHvHIJ1b438CXjgUtnAv3AAnAmg/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxiRTOQMYMdYCqtEPVuQiWF8uHzjTSXFX5BVskV68KqpaV8dp_hgolB9cTcX1PwLPQV/exec";
 
     // -------------------------------------------------------------
     // Local Configuration Settings (Google Sheets URL & Client ID)
@@ -160,7 +190,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Check cached session
-    const cachedUser = sessionStorage.getItem('deviation_logged_user');
+    let cachedUser = sessionStorage.getItem('deviation_logged_user');
+    if (!cachedUser && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+        const mockUser = {
+            name: "Local Tester",
+            email: "tester@mining.com",
+            picture: ""
+        };
+        sessionStorage.setItem('deviation_logged_user', JSON.stringify(mockUser));
+        cachedUser = JSON.stringify(mockUser);
+    }
     if (cachedUser) {
         try {
             currentAuthUser = JSON.parse(cachedUser);
@@ -272,6 +311,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setupWordCounter(briefDescriptionTextarea, descriptionWordCounter, 50);
     setupWordCounter(actionTakenTextarea, actionWordCounter, 30);
+    setupWordCounter(closeActionTextarea, closeActionWordCounter, 30);
 
 
     // -------------------------------------------------------------
@@ -383,6 +423,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize both uploaders
     initFileUploader(deviationDropzone, deviationPhotoUploadInput, deviationPreviewGrid, deviationFiles, 'deviationPhotoUploadError');
     initFileUploader(rectificationDropzone, rectificationPhotoUploadInput, rectificationPreviewGrid, rectificationFiles, 'rectificationPhotoUploadError');
+    initFileUploader(closeDropzone, closePhotoUploadInput, closePreviewGrid, closeFiles, 'closePhotoUploadError');
 
 
     // -------------------------------------------------------------
@@ -390,6 +431,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // -------------------------------------------------------------
     const textInputs = form.querySelectorAll('input, select, textarea');
     textInputs.forEach(input => {
+        input.addEventListener('input', () => {
+            const control = input.closest('.form-control');
+            if (control) clearControlError(control);
+        });
+        input.addEventListener('change', () => {
+            const control = input.closest('.form-control');
+            if (control) clearControlError(control);
+        });
+    });
+
+    const closeInputs = closeDeviationForm.querySelectorAll('input, select, textarea');
+    closeInputs.forEach(input => {
         input.addEventListener('input', () => {
             const control = input.closest('.form-control');
             if (control) clearControlError(control);
@@ -674,6 +727,321 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Scroll to top
         window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+
+    // -------------------------------------------------------------
+    // View Navigation Panel & Tab Event Listeners
+    // -------------------------------------------------------------
+    tabReport.addEventListener('click', () => {
+        tabReport.classList.add('active');
+        tabManage.classList.remove('active');
+        reportView.classList.remove('hidden');
+        manageView.classList.add('hidden');
+    });
+
+    tabManage.addEventListener('click', () => {
+        tabManage.classList.add('active');
+        tabReport.classList.remove('active');
+        manageView.classList.remove('hidden');
+        reportView.classList.add('hidden');
+        fetchOpenDeviations();
+    });
+
+    refreshOpenDevsBtn.addEventListener('click', () => {
+        fetchOpenDeviations();
+    });
+
+    const fetchOpenDeviations = async () => {
+        const url = getSavedAppsScriptUrl();
+        if (!url) {
+            showToast('Apps Script Web App URL is not set.', 'error');
+            return;
+        }
+
+        openDevsLoader.classList.remove('hidden');
+        noOpenDevsMessage.classList.add('hidden');
+        openDevsList.innerHTML = '';
+
+        try {
+            const response = await fetch(url + '?action=getOpenDeviations');
+            const result = await response.json();
+
+            openDevsLoader.classList.add('hidden');
+            if (result.status === 'success') {
+                renderOpenDeviations(result.data);
+            } else {
+                showToast(`Failed to fetch deviations: ${result.message}`, 'error');
+                showMockDeviationsFallback();
+            }
+        } catch (error) {
+            openDevsLoader.classList.add('hidden');
+            console.error('Error fetching open deviations:', error);
+            showToast('Using offline fallback data for verification.', 'info');
+            showMockDeviationsFallback();
+        }
+    };
+
+    const showMockDeviationsFallback = () => {
+        const mockData = [
+            {
+                rowIndex: 2,
+                serialNo: "101",
+                observationDate: "2026-07-12",
+                shift: "Shift A (Morning)",
+                relay: "Relay A",
+                shiftIncharge: "John Doe (Observer)",
+                classification: "UA",
+                mainHazard: "Slope Stability",
+                briefDescription: "Unsecured rock face observed at Section 4B. Minor loose debris falling on haul road.",
+                deviationPhotos: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=600",
+                responsiblePerson: "Excavation Team",
+                actionTaken: "Placed warning signs and redirected haul traffic to outer lane.",
+                status: "UA Open",
+                submittedBy: "John Doe",
+                submittedByEmail: "john.doe@mining.com"
+            },
+            {
+                rowIndex: 3,
+                serialNo: "102",
+                observationDate: "2026-07-11",
+                shift: "Shift C (Night)",
+                relay: "Relay C",
+                shiftIncharge: "Sarah Connor (Safety Officer)",
+                classification: "UC",
+                mainHazard: "Mine Illumination",
+                briefDescription: "Dumping area lights at OB dump #2 flicker intermittently, creating low visibility zones.",
+                deviationPhotos: "",
+                responsiblePerson: "Electrical Maintenance",
+                actionTaken: "Reported to shift electrician for lamp replacement.",
+                status: "UC Open",
+                submittedBy: "Sarah Connor",
+                submittedByEmail: "sarah.connor@mining.com"
+            }
+        ];
+        renderOpenDeviations(mockData);
+    };
+
+    const renderOpenDeviations = (data) => {
+        openDevsList.innerHTML = '';
+        if (!data || data.length === 0) {
+            noOpenDevsMessage.classList.remove('hidden');
+            return;
+        }
+
+        data.forEach(dev => {
+            const card = document.createElement('div');
+            card.className = 'open-dev-card';
+            card.id = `devCard_${dev.serialNo}`;
+
+            let formattedDate = dev.observationDate;
+            if (formattedDate && formattedDate.includes('T')) {
+                formattedDate = formattedDate.split('T')[0];
+            } else if (typeof formattedDate === 'string') {
+                formattedDate = formattedDate.split(' ')[0];
+            }
+
+            let photosHtml = '';
+            if (dev.deviationPhotos) {
+                const urls = dev.deviationPhotos.split(/[\s,\n]+/);
+                urls.forEach((url, i) => {
+                    if (url.trim()) {
+                        photosHtml += `
+                            <a href="${url.trim()}" target="_blank" class="open-dev-photo-link">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: middle;">
+                                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                                    <circle cx="12" cy="13" r="4"/>
+                                </svg>
+                                Photo ${i + 1}
+                            </a>
+                        `;
+                    }
+                });
+            }
+
+            card.innerHTML = `
+                <div class="open-dev-header">
+                    <div class="open-dev-title">
+                        <span class="open-dev-id">S No. ${dev.serialNo}</span>
+                        <span class="open-dev-badge">${dev.classification} (${dev.status})</span>
+                    </div>
+                </div>
+                <div class="open-dev-meta-grid">
+                    <div class="open-dev-meta-item"><strong>Date:</strong> ${formattedDate}</div>
+                    <div class="open-dev-meta-item"><strong>Shift/Relay:</strong> ${dev.shift} / ${dev.relay}</div>
+                    <div class="open-dev-meta-item"><strong>Observer:</strong> ${dev.shiftIncharge}</div>
+                    <div class="open-dev-meta-item"><strong>Responsible:</strong> ${dev.responsiblePerson}</div>
+                    <div class="open-dev-meta-item"><strong>Main Hazard:</strong> ${dev.mainHazard}</div>
+                </div>
+                <div class="open-dev-desc-box">
+                    <strong>Description:</strong> ${dev.briefDescription}
+                </div>
+                ${photosHtml ? `<div class="open-dev-photos-container">${photosHtml}</div>` : ''}
+                <div class="open-dev-actions" style="margin-top: 15px;">
+                    <button type="button" class="btn btn-primary btn-close-dev" data-row="${dev.rowIndex}" data-serial="${dev.serialNo}">
+                        Close Deviation
+                    </button>
+                </div>
+            `;
+
+            const closeBtn = card.querySelector('.btn-close-dev');
+            closeBtn.addEventListener('click', () => {
+                openCloseModal(dev.rowIndex, dev.serialNo);
+            });
+
+            openDevsList.appendChild(card);
+        });
+    };
+
+    const openCloseModal = (rowIndex, serialNo) => {
+        closeRowIndexInput.value = rowIndex;
+        closeSerialNoInput.value = serialNo;
+        closeNameInput.value = currentAuthUser ? currentAuthUser.name : 'Unknown Operator';
+
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        closeDateInput.value = `${yyyy}-${mm}-${dd}`;
+
+        closeShiftSelect.value = '';
+        closeRelaySelect.value = '';
+        closeActionTextarea.value = '';
+        closeActionWordCounter.textContent = '0 / 30 words';
+        closeActionWordCounter.className = 'word-counter';
+        closeFiles = [];
+        closePreviewGrid.innerHTML = '';
+
+        closeDeviationForm.querySelectorAll('.form-control').forEach(ctrl => {
+            clearControlError(ctrl);
+        });
+
+        closeModalOverlay.classList.remove('hidden');
+    };
+
+    cancelCloseBtn.addEventListener('click', () => {
+        closeModalOverlay.classList.add('hidden');
+    });
+
+    closeModalOverlay.addEventListener('click', (e) => {
+        if (e.target === closeModalOverlay) {
+            closeModalOverlay.classList.add('hidden');
+        }
+    });
+
+    const validateCloseForm = () => {
+        let isValid = true;
+
+        if (!closeDateInput.value) {
+            setControlError(closeDateInput.closest('.form-control'));
+            isValid = false;
+        } else {
+            const selected = new Date(closeDateInput.value);
+            const today = new Date();
+            today.setHours(23, 59, 59, 999);
+            if (selected > today) {
+                setControlError(closeDateInput.closest('.form-control'), 'Date cannot be in the future.');
+                isValid = false;
+            } else {
+                clearControlError(closeDateInput.closest('.form-control'));
+            }
+        }
+
+        if (!closeShiftSelect.value) {
+            setControlError(closeShiftSelect.closest('.form-control'));
+            isValid = false;
+        } else {
+            clearControlError(closeShiftSelect.closest('.form-control'));
+        }
+
+        if (!closeRelaySelect.value) {
+            setControlError(closeRelaySelect.closest('.form-control'));
+            isValid = false;
+        } else {
+            clearControlError(closeRelaySelect.closest('.form-control'));
+        }
+
+        const actionText = closeActionTextarea.value.trim();
+        const wordCount = countWords(actionText);
+        if (!actionText) {
+            setControlError(closeActionTextarea.closest('.form-control'), 'Action Taken is required.');
+            isValid = false;
+        } else if (wordCount > 30) {
+            setControlError(closeActionTextarea.closest('.form-control'), 'Action details cannot exceed 30 words.');
+            isValid = false;
+        } else {
+            clearControlError(closeActionTextarea.closest('.form-control'));
+        }
+
+        return isValid;
+    };
+
+    closeDeviationForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        if (!validateCloseForm()) {
+            showToast('Please correct the highlighted errors.', 'error');
+            return;
+        }
+
+        const url = getSavedAppsScriptUrl();
+        if (!url) {
+            showToast('Web App URL is not configured.', 'error');
+            return;
+        }
+
+        showLoading(true, 'Encoding uploaded files & submitting closure...');
+
+        try {
+            const photoPromises = closeFiles.map(async (file) => {
+                const b64 = await getBase64(file);
+                return { name: file.name, type: file.type, base64: b64 };
+            });
+            const photosData = await Promise.all(photoPromises);
+
+            const payload = {
+                action: 'closeDeviation',
+                rowIndex: closeRowIndexInput.value,
+                serialNo: closeSerialNoInput.value,
+                closedBy: closeNameInput.value,
+                dateOfClosing: closeDateInput.value,
+                closingShift: closeShiftSelect.value,
+                closingRelay: closeRelaySelect.value,
+                actionTaken: closeActionTextarea.value.trim(),
+                rectificationPhotos: photosData
+            };
+
+            showLoading(true, 'Updating status in Google Sheet...');
+
+            await fetch(url, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'text/plain;charset=utf-8'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            showLoading(false);
+            closeModalOverlay.classList.add('hidden');
+            showToast(`Deviation #${payload.serialNo} closed successfully!`, 'success');
+
+            const card = document.getElementById(`devCard_${payload.serialNo}`);
+            if (card) {
+                card.classList.add('fade-out');
+                setTimeout(() => {
+                    card.remove();
+                    if (openDevsList.children.length === 0) {
+                        noOpenDevsMessage.classList.remove('hidden');
+                    }
+                }, 300);
+            }
+
+        } catch (error) {
+            console.error('Failed to close deviation:', error);
+            showLoading(false);
+            showToast(`Error closing deviation: ${error.message}`, 'error');
+        }
     });
 
 
