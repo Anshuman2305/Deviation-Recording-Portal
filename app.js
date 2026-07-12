@@ -9,12 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const userName = document.getElementById('userName');
     const userEmail = document.getElementById('userEmail');
 
-    // DOM Elements - Configuration
-    const toggleSetupBtn = document.getElementById('toggleSetupBtn');
-    const setupGuideSection = document.getElementById('setupGuideSection');
-    const appsScriptUrlInput = document.getElementById('appsScriptUrl');
-    const googleClientIdInput = document.getElementById('googleClientId');
-    const saveConfigBtn = document.getElementById('saveConfigBtn');
+
 
     // DOM Elements - Form Fields
     const form = document.getElementById('deviationForm');
@@ -59,69 +54,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const MAX_FILES = 5;
     const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB in bytes
 
-    // CONFIGURATION: Hardcoded defaults (Change or configure via Settings UI)
-    const DEFAULT_CLIENT_ID = "1008064974246-o5lh21b2r0rgl5dbeia22q42ghb920ge.apps.googleusercontent.com"; // Default demo client id
-    const DEFAULT_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwO6r4bQ0K-17g6pX4L8y6bF_V_5K1lP0kG3nK9w/exec"; // Hardcoded Web App URL if available
+    // CONFIGURATION: Hardcoded credentials (Change these to your single active credentials)
+    const CLIENT_ID = "1084151719721-rf3lhle6mtmdu36nilffnesuq9m0o7ao.apps.googleusercontent.com";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyjdB4LwLHycR-3xAPcyXkYNEZrFDoX7YNcMyCYySSBHvHIJ1b438CXjgUtnAv3AAnAmg/exec";
 
     // -------------------------------------------------------------
     // Local Configuration Settings (Google Sheets URL & Client ID)
     // -------------------------------------------------------------
     const getSavedAppsScriptUrl = () => {
-        const saved = localStorage.getItem('deviation_portal_script_url');
-        return saved || DEFAULT_APPS_SCRIPT_URL;
+        return APPS_SCRIPT_URL;
     };
 
     const getSavedClientId = () => {
-        const saved = localStorage.getItem('deviation_portal_google_client_id');
-        return saved || DEFAULT_CLIENT_ID;
+        return CLIENT_ID;
     };
-
-    // Load initial settings
-    appsScriptUrlInput.value = getSavedAppsScriptUrl();
-    if (googleClientIdInput) {
-        googleClientIdInput.value = getSavedClientId();
-    }
-
-    // Toggle Configuration Drawer
-    toggleSetupBtn.addEventListener('click', () => {
-        setupGuideSection.classList.toggle('hidden');
-    });
-
-    // Save Configuration
-    saveConfigBtn.addEventListener('click', () => {
-        const url = appsScriptUrlInput.value.trim();
-        const clientId = googleClientIdInput ? googleClientIdInput.value.trim() : '';
-        
-        let urlSaved = false;
-        let clientSaved = false;
-
-        if (url) {
-            try {
-                new URL(url); // basic validation
-                localStorage.setItem('deviation_portal_script_url', url);
-                urlSaved = true;
-            } catch (e) {
-                showToast('Please enter a valid Apps Script URL (including https://).', 'error');
-                return;
-            }
-        } else {
-            localStorage.removeItem('deviation_portal_script_url');
-            urlSaved = true;
-        }
-
-        if (clientId) {
-            localStorage.setItem('deviation_portal_google_client_id', clientId);
-            clientSaved = true;
-        } else {
-            localStorage.removeItem('deviation_portal_google_client_id');
-            clientSaved = true;
-        }
-
-        if (urlSaved && clientSaved) {
-            showToast('Settings saved successfully! Please reload to apply Google Sign-In changes.', 'success');
-            setupGuideSection.classList.add('hidden');
-        }
-    });
 
     // Set Default Date as Today
     const setTodayDate = () => {
@@ -244,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // -------------------------------------------------------------
     const updateStatusOptions = (classification) => {
         statusChecklistContainer.innerHTML = '';
-        const options = classification === 'UA' ? 
+        const options = classification === 'UA' ?
             [{ value: 'UA Open', label: 'UA Open' }, { value: 'UA Close', label: 'UA Close' }] :
             [{ value: 'UC Open', label: 'UC Open' }, { value: 'UC Close', label: 'UC Close' }];
 
@@ -654,7 +600,7 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             showLoading(true, 'Saving reports to Google Sheets...');
-            
+
             // Submitting standard POST
             await fetch(url, {
                 method: 'POST',
@@ -690,14 +636,14 @@ document.addEventListener('DOMContentLoaded', () => {
         receiptHazard.textContent = data.mainHazard;
         receiptIncharge.textContent = data.shiftIncharge;
         receiptStatus.textContent = data.status;
-        
+
         // Style status badge inside modal
         if (data.status.endsWith('Open')) {
             receiptStatus.className = 'receipt-value status-badge';
         } else {
             receiptStatus.className = 'receipt-value status-badge closed';
         }
-        
+
         receiptDevPhotos.textContent = `${deviationFiles.length} file(s)`;
         receiptRectPhotos.textContent = `${rectificationFiles.length} file(s)`;
 
@@ -708,13 +654,13 @@ document.addEventListener('DOMContentLoaded', () => {
     closeSuccessBtn.addEventListener('click', () => {
         successOverlay.classList.add('hidden');
         form.reset();
-        
+
         // Reset state variables
         deviationFiles = [];
         rectificationFiles = [];
         deviationPreviewGrid.innerHTML = '';
         rectificationPreviewGrid.innerHTML = '';
-        
+
         // Reset inputs
         setTodayDate();
         descriptionWordCounter.textContent = '0 / 50 words';
