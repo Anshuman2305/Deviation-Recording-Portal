@@ -842,17 +842,19 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             let photosHtml = '';
-            if (dev.deviationPhotos) {
+            if (dev.deviationPhotos && dev.deviationPhotos.trim() !== '' && dev.deviationPhotos !== 'No photos' && dev.deviationPhotos !== 'No photos uploaded') {
                 const urls = dev.deviationPhotos.split(/[\s,\n]+/);
-                urls.forEach((url, i) => {
-                    if (url.trim()) {
+                let photoIndex = 1;
+                urls.forEach((url) => {
+                    const trimmedUrl = url.trim();
+                    if (trimmedUrl.startsWith('http://') || trimmedUrl.startsWith('https://')) {
                         photosHtml += `
-                            <a href="${url.trim()}" target="_blank" class="open-dev-photo-link">
+                            <a href="${trimmedUrl}" target="_blank" class="open-dev-photo-link">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: middle;">
                                     <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
                                     <circle cx="12" cy="13" r="4"/>
                                 </svg>
-                                Photo ${i + 1}
+                                Photo ${photoIndex++}
                             </a>
                         `;
                     }
