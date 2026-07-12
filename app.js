@@ -1389,13 +1389,13 @@ document.addEventListener('DOMContentLoaded', () => {
             sortedHazards.forEach((item, index) => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td class="text-muted font-bold">${index + 1}</td>
+                    <td class="text-muted font-bold text-center">${index + 1}</td>
                     <td class="font-bold" style="color: #fff;">${item.hazardName}</td>
-                    <td class="text-info font-bold">${item.total}</td>
-                    <td class="${item.uaOpen > 0 ? 'text-danger font-bold' : 'text-muted'}">${item.uaOpen}</td>
-                    <td class="${item.uaClosed > 0 ? 'text-success font-bold' : 'text-muted'}">${item.uaClosed}</td>
-                    <td class="${item.ucOpen > 0 ? 'text-danger font-bold' : 'text-muted'}">${item.ucOpen}</td>
-                    <td class="${item.ucClosed > 0 ? 'text-success font-bold' : 'text-muted'}">${item.ucClosed}</td>
+                    <td class="text-info font-bold text-center">${item.total}</td>
+                    <td class="text-center ${item.uaOpen > 0 ? 'text-danger font-bold' : 'text-muted'}">${item.uaOpen}</td>
+                    <td class="text-center ${item.uaClosed > 0 ? 'text-success font-bold' : 'text-muted'}">${item.uaClosed}</td>
+                    <td class="text-center ${item.ucOpen > 0 ? 'text-danger font-bold' : 'text-muted'}">${item.ucOpen}</td>
+                    <td class="text-center ${item.ucClosed > 0 ? 'text-success font-bold' : 'text-muted'}">${item.ucClosed}</td>
                 `;
                 tbodyHazardDistribution.appendChild(tr);
             });

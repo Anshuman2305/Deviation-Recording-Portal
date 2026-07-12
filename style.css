@@ -1806,8 +1806,18 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     background: rgba(255, 255, 255, 0.01);
 }
 
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
 .font-bold {
     font-weight: 700;
+}
+
+.text-center {
+    text-align: center !important;
 }
 
 /* Color utility tags inside tables */

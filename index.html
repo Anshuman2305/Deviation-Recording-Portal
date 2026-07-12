@@ -13,7 +13,7 @@
     <!-- Google Identity Services client library -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <!-- CSS Stylesheet -->
-    <link rel="stylesheet" href="style.css?v=1.2">
+    <link rel="stylesheet" href="style.css?v=1.3">
 </head>
 
 <body>
@@ -492,19 +492,19 @@
                                 <table class="dashboard-table" id="tableStatusClassification">
                                     <thead>
                                         <tr>
-                                            <th>
+                                            <th class="text-center">
                                                 <span class="hide-on-mobile">Unsafe Act (UA) Open</span>
                                                 <span class="show-on-mobile">UA Open</span>
                                             </th>
-                                            <th>
+                                            <th class="text-center">
                                                 <span class="hide-on-mobile">Unsafe Act (UA) Closed</span>
                                                 <span class="show-on-mobile">UA Closed</span>
                                             </th>
-                                            <th>
+                                            <th class="text-center">
                                                 <span class="hide-on-mobile">Unsafe Condition (UC) Open</span>
                                                 <span class="show-on-mobile">UC Open</span>
                                             </th>
-                                            <th>
+                                            <th class="text-center">
                                                 <span class="hide-on-mobile">Unsafe Condition (UC) Closed</span>
                                                 <span class="show-on-mobile">UC Closed</span>
                                             </th>
@@ -512,10 +512,10 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td id="tdUaOpen" class="text-danger font-bold">0</td>
-                                            <td id="tdUaClosed" class="text-success font-bold">0</td>
-                                            <td id="tdUcOpen" class="text-danger font-bold">0</td>
-                                            <td id="tdUcClosed" class="text-success font-bold">0</td>
+                                            <td id="tdUaOpen" class="text-danger font-bold text-center">0</td>
+                                            <td id="tdUaClosed" class="text-success font-bold text-center">0</td>
+                                            <td id="tdUcOpen" class="text-danger font-bold text-center">0</td>
+                                            <td id="tdUcClosed" class="text-success font-bold text-center">0</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -529,25 +529,25 @@
                                 <table class="dashboard-table" id="tableHazardDistribution">
                                     <thead>
                                         <tr>
-                                            <th>Sl. No.</th>
+                                            <th class="text-center">Sl. No.</th>
                                             <th>Hazard Category</th>
-                                            <th>
+                                            <th class="text-center">
                                                 <span class="hide-on-mobile">Total Deviations</span>
                                                 <span class="show-on-mobile">Total</span>
                                             </th>
-                                            <th>
+                                            <th class="text-center">
                                                 <span class="hide-on-mobile">UA Open</span>
                                                 <span class="show-on-mobile">UA O</span>
                                             </th>
-                                            <th>
+                                            <th class="text-center">
                                                 <span class="hide-on-mobile">UA Closed</span>
                                                 <span class="show-on-mobile">UA C</span>
                                             </th>
-                                            <th>
+                                            <th class="text-center">
                                                 <span class="hide-on-mobile">UC Open</span>
                                                 <span class="show-on-mobile">UC O</span>
                                             </th>
-                                            <th>
+                                            <th class="text-center">
                                                 <span class="hide-on-mobile">UC Closed</span>
                                                 <span class="show-on-mobile">UC C</span>
                                             </th>
@@ -765,7 +765,7 @@
     <div id="toastContainer" class="toast-container"></div>
 
     <!-- Application Script -->
-    <script src="app.js?v=2.2"></script>
+    <script src="app.js?v=2.3"></script>
 </body>
 
 </html>
