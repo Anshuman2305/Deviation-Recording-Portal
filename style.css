@@ -1387,6 +1387,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 /* Navigation Tabs Styling */
 .navigation-tabs {
     display: flex;
+    justify-content: center;
     gap: 15px;
     margin-bottom: 25px;
     border-bottom: 1px solid var(--glass-border);
