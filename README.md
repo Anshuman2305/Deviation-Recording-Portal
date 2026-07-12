@@ -1,4 +1,4 @@
-# PBNW Mine Deviation & Near Miss Reporting Portal
+# Mine Deviation Reporting Portal
 
 A premium, responsive, glassmorphic web application built to log, track, analyze, and rectify mine safety deviations (Unsafe Acts and Unsafe Conditions) at the **Pakri Barwadih North West (PBNW) Coal Mining Project**.
 
@@ -59,7 +59,7 @@ To connect this portal to your own Google Workspace account, follow these steps:
 4. Click **Deploy** > **New deployment**.
 5. Choose select type **Web app**.
 6. Set the configuration details:
-   *   **Description**: `PBNW Mine Deviation Web App Backend`
+   *   **Description**: `Mine Deviation Web App Backend`
    *   **Execute as**: `Me (your-email@domain.com)`
    *   **Who has access**: `Anyone` (This is required to allow frontend fetch queries).
 7. Click **Deploy**. Authorize permissions if prompted by Google.
