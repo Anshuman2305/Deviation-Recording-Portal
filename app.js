@@ -928,7 +928,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="open-dev-header">
                     <div class="open-dev-title">
                         <span class="open-dev-id">S No. ${dev.serialNo}</span>
-                        <span class="open-dev-badge">${dev.classification} (${dev.status})</span>
+                        <span class="open-dev-badge">${dev.status}</span>
                     </div>
                 </div>
                 <div class="open-dev-meta-grid">
@@ -1309,7 +1309,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const parseYearMonth = (dateStr) => {
         if (!dateStr) return null;
-        
+
         // Handle standard YYYY-MM-DD strings (like mock data)
         if (dateStr.length === 10 && dateStr.includes('-')) {
             const parts = dateStr.split('-');
@@ -1317,7 +1317,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return `${parts[0]}-${parts[1]}`;
             }
         }
-        
+
         // Handle ISO strings with local timezone offset correction
         const d = new Date(dateStr);
         if (!isNaN(d.getTime())) {
@@ -1325,7 +1325,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const month = String(d.getMonth() + 1).padStart(2, '0');
             return `${year}-${month}`;
         }
-        
+
         return null;
     };
 
