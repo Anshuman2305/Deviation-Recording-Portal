@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // CONFIGURATION: Hardcoded credentials (Change these to your single active credentials)
     const CLIENT_ID = "1084151719721-rf3lhle6mtmdu36nilffnesuq9m0o7ao.apps.googleusercontent.com";
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxiRTOQMYMdYCqtEPVuQiWF8uHzjTSXFX5BVskV68KqpaV8dp_hgolB9cTcX1PwLPQV/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwa6i5eOTK-O19JHVMet4yex5zlxuwmdJrn7UbtK7oCGaJ_uXzCTxpdYM_nRMkmUZKf_g/exec";
 
     // -------------------------------------------------------------
     // Local Configuration Settings (Google Sheets URL & Client ID)

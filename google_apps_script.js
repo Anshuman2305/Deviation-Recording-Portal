@@ -193,9 +193,15 @@ function uploadPhotosToDrive(folderName, photosList) {
   var folder;
   var folders = DriveApp.getFoldersByName(folderName);
 
-  if (folders.hasNext()) {
-    folder = folders.next();
-  } else {
+  while (folders.hasNext()) {
+    var f = folders.next();
+    if (!f.isTrashed()) {
+      folder = f;
+      break;
+    }
+  }
+
+  if (!folder) {
     folder = DriveApp.createFolder(folderName);
   }
 
@@ -366,20 +372,32 @@ function closeDeviation(data) {
       .setBorder(true, true, true, true, true, true, "#cbd5e1", SpreadsheetApp.BorderStyle.SOLID);
   }
   
-  // Upload rectification photos
-  var rectificationPhotoUrls = uploadPhotosToDrive("Rectification Photos", data.rectificationPhotos);
-  
-  // Update cell values
+  // Update status, action taken, and metadata first (always succeeds)
   var classification = sheet.getRange(rowIndex, 7).getValue(); // Column 7
   var newStatus = classification === "UA" ? "UA Close" : "UC Close";
   
   sheet.getRange(rowIndex, 12).setValue(data.actionTaken); // Column 12 (Action Taken)
-  sheet.getRange(rowIndex, 13).setValue(rectificationPhotoUrls.join("\n")); // Column 13 (Rectification Photos)
   sheet.getRange(rowIndex, 14).setValue(newStatus); // Column 14 (Status)
   sheet.getRange(rowIndex, 17).setValue(data.closedBy); // Column 17 (Closed By)
   sheet.getRange(rowIndex, 18).setValue(data.dateOfClosing); // Column 18 (Date of Closing)
   sheet.getRange(rowIndex, 19).setValue(data.closingRelay); // Column 19 (Closing Relay)
   sheet.getRange(rowIndex, 20).setValue(data.closingShift); // Column 20 (Closing Shift)
+  
+  // Upload rectification photos safely in a try-catch to protect status update
+  var photosCellContent = "No photos uploaded.";
+  if (data.rectificationPhotos && data.rectificationPhotos.length > 0) {
+    try {
+      var rectificationPhotoUrls = uploadPhotosToDrive("Rectification Photos", data.rectificationPhotos);
+      if (rectificationPhotoUrls && rectificationPhotoUrls.length > 0) {
+        photosCellContent = rectificationPhotoUrls.join("\n");
+      }
+    } catch (e) {
+      photosCellContent = "Photo upload failed: " + e.toString();
+      Logger.log("Rectification photo upload failed: " + e.toString());
+    }
+  }
+  
+  sheet.getRange(rowIndex, 13).setValue(photosCellContent); // Column 13 (Rectification Photos)
   
   return ContentService.createTextOutput(JSON.stringify({
     status: "success",
