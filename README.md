@@ -1,4 +1,4 @@
-# Mine Deviation Reporting Portal
+# Mine Deviation Recording Portal
 
 A premium, responsive, glassmorphic web application built to log, track, analyze, and rectify mine safety deviations (Unsafe Acts and Unsafe Conditions) at the **Pakri Barwadih North West (PBNW) Coal Mining Project**.
 
